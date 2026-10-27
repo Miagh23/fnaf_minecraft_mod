@@ -3,58 +3,98 @@ package com.mimod.entity.custom;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.BowItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 public class ChicaEntity extends Monster implements RangedAttackMob
 {
     //El ataque del cupcake
-    private final RangedCupcakeAttackGoal  cupcakeGoal =
-            new RangedCupcakeAttackGoal(this,1f,20,20);
-    //indica si ha disparado ya el cupcake
-    private boolean hasShot;
+
+    //indica si está en modo huida (despues de disparar el cupcake)
+    private static final int MAX_ATTACK_COOLDOWN = 60;
+    private static final int FLEEING_TIME=100;
+    private static final double HEALTH=20;
+    private static final double RANGE=25;
+    private static final double MOVEMENT_SPEED=0.25;
+    private int attackCooldown;
+    private boolean fleeing;
+
 
     /**
      *
      * @param monster el mob de chica en cuestión
      * @param world el mundo
      */
-    public ChicaEntity(EntityType<? extends Monster> monster, Level world) {
+    public ChicaEntity(EntityType<? extends ChicaEntity> monster, Level world) {
 
         super(monster, world);
-        this.hasShot =false;
+        this.fleeing =false;
+        this.attackCooldown=MAX_ATTACK_COOLDOWN;
     }
 
     /**
-     * Define el comportamiento del mob y sus prioridades (cuanto más pequeño el numero, más alta la prioridad).
+     * Define los atributos básicos de la entidad.
+     * @return
+     */
+    public static AttributeSupplier.Builder createAttributes() {
+        return Monster.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, HEALTH)
+                .add(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED)
+                .add(Attributes.FOLLOW_RANGE, RANGE);
+    }
+
+    /**
+     * Define los comportamiento del mob y sus prioridades (cuanto más pequeño el numero, más alta la prioridad).
      * Evita el sol, el agua, mira al jugador y al azar.
      * También elige su objetivo mirando si algo le ha atacado, luego el jugador y luego los golems.
      */
     protected void registerGoals() {
-        this.goalSelector.addGoal(2, new RestrictSunGoal(this));
-        this.goalSelector.addGoal(3, new FleeSunGoal(this, (double)1.0F));
+        //flotar en agua
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+
+        //evitar el sol
+        this.goalSelector.addGoal(1, new RestrictSunGoal(this));
+        this.goalSelector.addGoal(2, new FleeSunGoal(this, (double)1.0F));
+
+        //huir
+        this.goalSelector.addGoal(3, new FleeingGoal(this, 1.3D));
+
+        //atacar
+        this.goalSelector.addGoal(4, new RangedCupcakeAttackGoal(this, 1.0D, 40, 12.0F));
+
+        //dar tumbos
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, (double)1.0F));
+
+        //mirar al jugador
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+
+        //mirar alrededor
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+
+        //fijar el objetivo en alguien que le acaba de atacar
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this, new Class[0]));
+        //fijar el objetivo en le jugador
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, true));
+        //fijar el objetivo en un golem
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, IronGolem.class, true));
 
     }
@@ -90,6 +130,45 @@ public class ChicaEntity extends Monster implements RangedAttackMob
 
     }
 
+    /**
+     * spawnea el mob. groupd data es obligatorio devolverlo con las caracteristicas del super por logica de minecraft.
+     * @param level
+     * @param difficulty
+     * @param spawnType
+     * @param groupData
+     * @return
+     */
+    @Nullable
+    @Override
+
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty,
+                                        MobSpawnType spawnType, @Nullable SpawnGroupData groupData) {
+        groupData = super.finalizeSpawn(level, difficulty, spawnType, groupData);
+
+        return groupData;
+    }
+
+    /**
+     * Hace que se queme con el sol
+     */
+    @Override
+    public void aiStep() {
+
+            if (this.isSunBurnTick()) {
+                this.igniteForSeconds(8.0F);
+            }
+
+            super.aiStep();
+    }
+
+    /**
+     * Equivalente al Update. Define que pasa en cada tick de tiempo (1s=20ticks) mientras la entidad exista.
+     */
+    @Override
+    public void tick() {
+        super.tick();
+        if (attackCooldown > 0) attackCooldown--;
+    }
     @Override
     /**
      * Es inmune a las explosiones provocadas por ella misma.
@@ -109,7 +188,6 @@ public class ChicaEntity extends Monster implements RangedAttackMob
         private final double speedModifier;
         private final int seeTimeRequired;
         private final float attackRadiusSqr;
-        private int attackTime = -1;
         private int seeTime;
 
         public RangedCupcakeAttackGoal(ChicaEntity chica, double speedModifier, int seeTimeRequired, float attackRadius) {
@@ -125,12 +203,21 @@ public class ChicaEntity extends Monster implements RangedAttackMob
          * Dispara solo si tiene un target y si no ha disparado ya.
          */
         public boolean canUse() {
-            return this.mob.getTarget() != null && !this.mob.hasShot();
+            return this.mob.getTarget() != null && !this.mob.isFleeing() && mob.canAttack();
+        }
+
+        /**
+         * Hace un update cada tick y no cada 2 como es el defecto, más precisión para el ataque.
+         * @return
+         */
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
         }
 
         @Override
         /**
-         * Se ejecuta cuando se activa el canUse.
+         * Se ejecuta cuando se activa el canUse. Arranca el comportamiento y su lógica.
          */
         public void start() {
             super.start();
@@ -140,22 +227,22 @@ public class ChicaEntity extends Monster implements RangedAttackMob
         @Override
         /**
          * Se ejecuta cuando se desactiva el canUse. Reinicia los contadores y las banderas.
-         * Pd: Ahora mismo, no funcionaria correctamente ya que hasShot entra en un bucle con el goal
+         *
          */
         public void stop() {
             super.stop();
             this.mob.setAggressive(false);
-            this.seeTime = 0;
-            this.attackTime = -5;
-            this.mob.setHasShot(false);
+           this.seeTime=0; //reinicia el contador de visión
 
         }
 
         /**
-         * Determina cuando realizar cada accion. Si hay un objetivo y le puede ver va subiendo el contador
+         * Determina como funciona este comportamiento. El Update del comportamiento (Goal) de atacar en sí,
+         * solo funciona mientras se haya activado el metodo start de este comportamiento.
          */
         @Override
         public void tick() {
+
             LivingEntity target = this.mob.getTarget();
             if (target != null) {
                 double distanceToTarget = this.mob.distanceToSqr(target.getX(), target.getY(), target.getZ());
@@ -171,7 +258,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob
                     this.seeTime--;
                 }
 
-                if (!(distanceToTarget > (double) this.attackRadiusSqr) && this.seeTime >= 20) {
+                if (!(distanceToTarget > (double) this.attackRadiusSqr) && this.seeTime >= seeTimeRequired) {
                     this.mob.getNavigation().stop();
 
                 } else {
@@ -185,6 +272,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob
 
 
                     this.mob.performRangedAttack(target, 3);
+                    this.mob.setFleeing(true);
 
 
                 }
@@ -193,6 +281,85 @@ public class ChicaEntity extends Monster implements RangedAttackMob
         }
     }
 
+    /**
+     * El comportamiento de huir. Tiene parametros del mob, su velocidad y el tiempo en ticks de huida restante. (20ticks=1s)
+     */
+    static class FleeingGoal extends Goal {
+        private final ChicaEntity mob;
+        private final double speed;
+        private int fleeTicks;
+
+        public FleeingGoal(ChicaEntity mob, double speed) {
+            this.mob = mob;
+            this.speed = speed;
+
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
+        }
+
+        /**
+         * Solo se activa cuando el mob está huyendo.
+         * @return
+         */
+        @Override
+        public boolean canUse() {
+            return mob.isFleeing();
+        }
+
+        /**
+         * Solo sigue activo mientras este en modo huir y mientras le quede tiempo de huida.
+         * @return
+         */
+        @Override
+        public boolean canContinueToUse() {
+            return mob.isFleeing() && fleeTicks > 0;
+        }
+
+        /**
+         * Cuando arranca, inicia el temporizador y ejecuta el método runAway()
+         */
+        @Override
+        public void start() {
+            fleeTicks = mob.FLEEING_TIME;
+            runAway();
+        }
+
+        /**
+         * En cada tick, mientras este comportamiento(goal) este activo, se reduce el tiempo de huida
+         * y se llama al método runAway() si fuera necesario.
+         */
+        @Override
+        public void tick() {
+            fleeTicks--;
+            // Si llegó al destino antes de tiempo, busca otro punto más lejos
+            if (mob.getNavigation().isDone()) {
+                runAway();
+            }
+        }
+
+        /**
+         * Detecta a su objetivo y huye en una dirección aleatoria de él. Si no puede seguir huyendo en esa dirección, vuelva a calcularla.
+         */
+        private void runAway() {
+            LivingEntity target = mob.getTarget();
+            Vec3 from = target != null ? target.position() : mob.position();
+                                                 //mob, horizontalRange, verticalRange, positionToAvoid
+            Vec3 pos = DefaultRandomPos.getPosAway(mob, 16, 7, from);
+            if (pos != null) {
+                mob.getNavigation().moveTo(pos.x, pos.y, pos.z, speed);
+            }
+        }
+
+        /**
+         * Cuando acaba este comportamiento, se cambia la bandera
+         * y se activa el cooldown de ataque (así se evita que ataque instantáneamente despues de huir).
+         */
+        @Override
+        public void stop() {
+            mob.getNavigation().stop();
+            mob.setFleeing(false);
+            mob.setAttackCooldown(mob.MAX_ATTACK_COOLDOWN);
+        }
+    }
 
     /**
      * Hereda de la bola de fuego del ghast, no deja fuego y tiene mayor potencia de explosión.
@@ -200,14 +367,18 @@ public class ChicaEntity extends Monster implements RangedAttackMob
         static class Cupcake extends LargeFireball{
 
 
-        private static final int EXPLOSION_POWER = 3;
+        private static final int EXPLOSION_POWER = 3; //explosion de creeper=3
 
             public Cupcake(Level level, LivingEntity owner, Vec3 direction) {
 
                 super(level, owner, direction, EXPLOSION_POWER);
             }
 
-            @Override
+        /**
+         * Define que hace cuando golpea
+         * @param result
+         */
+        @Override
             protected void onHit(HitResult result) {
                 if (!this.level().isClientSide) {
                     // El último parámetro 'false' = SIN fuego
@@ -221,15 +392,31 @@ public class ChicaEntity extends Monster implements RangedAttackMob
                     this.discard();
                 }
             }
+
+        /**
+         * Indica que el proyectil, es decir el cupcake, no se puede dañar.
+         * @param source
+         * @param amount
+         * @return
+         */
+            @Override
+            public boolean hurt(DamageSource source, float amount) {
+                 return false;
+        }
         }
 
-    public boolean hasShot() {
-        return hasShot;
+
+    public boolean isFleeing() {
+        return fleeing;
     }
 
-    public void setHasShot(boolean hasShot) {
-        this.hasShot = hasShot;
+    public void setFleeing(boolean fleeing) {
+        this.fleeing = fleeing;
     }
+
+
+    public boolean canAttack() { return attackCooldown <= 0; }
+    public void setAttackCooldown(int ticks) { this.attackCooldown = ticks; }
 
 }
 
