@@ -2,7 +2,7 @@ package com.mimod.event;
 
 import com.mimod.MiMod;
 import com.mimod.entity.ModEntities;
-import com.mimod.entity.client.RhinoModel;
+import com.mimod.entity.client.rhino.RhinoModel;
 import com.mimod.entity.custom.ChicaEntity;
 import com.mimod.entity.custom.RhinoEntity;
 import net.minecraftforge.client.event.EntityRenderersEvent;

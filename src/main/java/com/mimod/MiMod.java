@@ -1,7 +1,7 @@
 package com.mimod;
 
 import com.mimod.entity.ModEntities;
-import com.mimod.entity.client.RhinoRenderer;
+import com.mimod.entity.client.rhino.RhinoRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;

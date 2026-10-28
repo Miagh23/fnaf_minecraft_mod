@@ -1,11 +1,12 @@
-package com.mimod.entity.client;
+package com.mimod.entity.client.chica;
 
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 
-public class RhinoAnimations {
+//TEMPORAL PARA PROBAR LOGICA
+public class ChicaAnimations {
 
 
     public static final AnimationDefinition RHINO_IDLE = AnimationDefinition.Builder.withLength(2f).looping()

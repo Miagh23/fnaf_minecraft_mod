@@ -38,6 +38,10 @@ public class ChicaEntity extends Monster implements RangedAttackMob
     private int attackCooldown;
     private boolean fleeing;
 
+    //TEMPORAL PARA ANIMACIONES
+    public final AnimationState idleAnimationState = new AnimationState();
+    private int idleAnimationTimeout = 0;
+
 
     /**
      *
@@ -126,7 +130,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob
 
         Cupcake cupcake = new Cupcake(level,this,dir.normalize());
         cupcake.setPos(startX,startY,startZ);
-        level.addFreshEntity(cupcake);
+        level.addFreshEntity(cupcake); //ESENCIAL
 
     }
 
@@ -182,6 +186,26 @@ public class ChicaEntity extends Monster implements RangedAttackMob
     }
 
 
+
+    /**
+     * TEMPORAL PARA ANIMACIONES
+     * Añade la animación del mob. Va restando ticks hasta que llega a 0,
+     * entonces activa la animación y resetea el contador.
+     * Es importante que el contador de ticks coincida con la longitud
+     * en ticks de la animación para que se genere un bucle limpio.
+     */
+    private void setupAnimationStates()
+    {
+        if(this.idleAnimationTimeout<=0)
+        {
+            this.idleAnimationTimeout=40;
+            this.idleAnimationState.start(this.tickCount);
+        }
+        else
+        {
+            --this.idleAnimationTimeout;
+        }
+    }
 
     static class RangedCupcakeAttackGoal extends Goal {
         private final ChicaEntity mob;
