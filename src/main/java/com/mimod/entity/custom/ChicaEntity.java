@@ -34,8 +34,15 @@ public class ChicaEntity extends Monster implements RangedAttackMob
     private static final int MAX_ATTACK_COOLDOWN = 60;
     private static final int FLEEING_TIME=100;
     private static final double HEALTH=20;
-    private static final double RANGE=45;
+    private static final double PLAYER_DETECTION_RANGE=45;
     private static final double MOVEMENT_SPEED=0.35;
+    private static final double FLEEING_SPEED=2f;
+    private static final double CHASE_SPEED_MODIFIER=1.5;
+
+
+
+    private static final int CHASE_SEE_TIME_REQUIRED=40;
+    private static final float RANGE_ATTACK_RADIUS=18;
     private int attackCooldown;
     private boolean fleeing;
 
@@ -64,7 +71,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, HEALTH)
                 .add(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED)
-                .add(Attributes.FOLLOW_RANGE, RANGE);
+                .add(Attributes.FOLLOW_RANGE, PLAYER_DETECTION_RANGE);
     }
 
     /**
@@ -81,10 +88,10 @@ public class ChicaEntity extends Monster implements RangedAttackMob
         this.goalSelector.addGoal(2, new FleeSunGoal(this, (double)1.0F));
 
         //huir
-        this.goalSelector.addGoal(3, new FleeingGoal(this, 1.7D));
+        this.goalSelector.addGoal(3, new FleeingGoal(this, FLEEING_SPEED));
 
         //atacar
-        this.goalSelector.addGoal(4, new RangedCupcakeAttackGoal(this, 1.0D, 40, 9.0F));
+        this.goalSelector.addGoal(4, new RangedCupcakeAttackGoal(this, CHASE_SPEED_MODIFIER, CHASE_SEE_TIME_REQUIRED, RANGE_ATTACK_RADIUS));
 
         //dar tumbos
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, (double)1.0F));
