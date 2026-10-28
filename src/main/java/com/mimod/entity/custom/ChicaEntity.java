@@ -34,8 +34,8 @@ public class ChicaEntity extends Monster implements RangedAttackMob
     private static final int MAX_ATTACK_COOLDOWN = 60;
     private static final int FLEEING_TIME=100;
     private static final double HEALTH=20;
-    private static final double RANGE=25;
-    private static final double MOVEMENT_SPEED=0.25;
+    private static final double RANGE=45;
+    private static final double MOVEMENT_SPEED=0.35;
     private int attackCooldown;
     private boolean fleeing;
 
@@ -81,10 +81,10 @@ public class ChicaEntity extends Monster implements RangedAttackMob
         this.goalSelector.addGoal(2, new FleeSunGoal(this, (double)1.0F));
 
         //huir
-        this.goalSelector.addGoal(3, new FleeingGoal(this, 1.3D));
+        this.goalSelector.addGoal(3, new FleeingGoal(this, 1.7D));
 
         //atacar
-        this.goalSelector.addGoal(4, new RangedCupcakeAttackGoal(this, 1.0D, 40, 12.0F));
+        this.goalSelector.addGoal(4, new RangedCupcakeAttackGoal(this, 1.0D, 40, 9.0F));
 
         //dar tumbos
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, (double)1.0F));
