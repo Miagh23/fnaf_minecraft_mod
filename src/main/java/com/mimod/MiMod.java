@@ -1,7 +1,9 @@
 package com.mimod;
 
 import com.mimod.entity.ModEntities;
+import com.mimod.entity.client.chica.ChicaRenderer;
 import com.mimod.entity.client.rhino.RhinoRenderer;
+import com.mimod.entity.custom.ChicaEntity;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -60,7 +62,8 @@ public class MiMod {
     }
 
     /**
-     * Registra en el cliente los metodos en las clases que tengan el @subscribeEvent
+     * Registra en el cliente los metodos en las clases que tengan el @subscribeEvent y el modelo o que se yo.
+     * IMPORTANTE METER TODAS LAS ENTIDADES
      */
     @Mod.EventBusSubscriber(modid = MOD_ID, bus= Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
@@ -69,6 +72,7 @@ public class MiMod {
         public static void onClientSetup(FMLClientSetupEvent event)
         {
             EntityRenderers.register(ModEntities.RHINO.get(), RhinoRenderer::new);
+            EntityRenderers.register(ModEntities.CHICA.get(), ChicaRenderer::new);
         }
     }
 

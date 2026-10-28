@@ -2,6 +2,7 @@ package com.mimod.event;
 
 import com.mimod.MiMod;
 import com.mimod.entity.ModEntities;
+import com.mimod.entity.client.chica.ChicaModel;
 import com.mimod.entity.client.rhino.RhinoModel;
 import com.mimod.entity.custom.ChicaEntity;
 import com.mimod.entity.custom.RhinoEntity;
@@ -16,7 +17,7 @@ public class ModEventBusEvents {
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event)
     {
         event.registerLayerDefinition(RhinoModel.LAYER_LOCATION, RhinoModel::createBodyLayer);
-        //event.registerLayerDefinition(ChicaModel.LAYER_LOCATION, ChicaModel::createBodyLayer);//Falta crear el modelo de chica
+        event.registerLayerDefinition(ChicaModel.LAYER_LOCATION, ChicaModel::createBodyLayer);//Falta crear el modelo de chica
     }
 
     /**
