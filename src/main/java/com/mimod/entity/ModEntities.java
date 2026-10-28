@@ -33,6 +33,12 @@ public class ModEntities {
                             .sized(0.6F, 1.8F)//el jugador y zombie tiene esta escala.
                             .build("chica"));
 
+    public static final RegistryObject<EntityType<ChicaEntity.Cupcake>> CUPCAKE =
+            ENTITY_TYPES.register("cupcake", () ->
+                    EntityType.Builder.<ChicaEntity.Cupcake>of(ChicaEntity.Cupcake::new, MobCategory.MISC) // = miscellaneous -> no son seres vivos ni mobs tradicionales
+                            .sized(0.25F, 0.25F)
+                            .build("cupcake"));
+
 
     /**
      * Registra el mod en la categoría de entity_types

@@ -1,5 +1,6 @@
 package com.mimod.entity.custom;
 
+import com.mimod.entity.ModEntities;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
@@ -388,15 +389,26 @@ public class ChicaEntity extends Monster implements RangedAttackMob
     /**
      * Hereda de la bola de fuego del ghast, no deja fuego y tiene mayor potencia de explosión.
      */
-        static class Cupcake extends LargeFireball{
+        public static class Cupcake extends LargeFireball{
+        //constructor obligatorio de Minecraft (para el registro en ModEntities)
+        public Cupcake(EntityType<? extends LargeFireball> entityType, Level level) {
+            super(entityType, level);
+        }
+        private static final int EXPLOSION_POWER = 1; //explosion de creeper=3 --> le he bajado el daño a uno para ver mejor el funcionamiento
 
-
-        private static final int EXPLOSION_POWER = 3; //explosion de creeper=3
-
-            public Cupcake(Level level, LivingEntity owner, Vec3 direction) {
-
-                super(level, owner, direction, EXPLOSION_POWER);
+            public Cupcake(Level level, ChicaEntity owner, Vec3 direction) { // lo cambio a ChicaEntity para poder sacar la posición de Chica
+                super(ModEntities.CUPCAKE.get(), level); // para que se use el registro personalizado en lugar del de FireBall
+                this.setOwner(owner); // para saber quién lo ha disparado y así evitar que le dañe
+                this.setPos(owner.getX(), owner.getY(0.5D) + 0.5D, owner.getZ()); // para que salga desde más arriba en vez de desde los pies
+                this.setDeltaMovement(direction.scale(0.5D)); // empuja el proyectil
             }
+        /**
+         * para apagar el fuego pero mantener la explosión
+         */
+        @Override
+        public boolean shouldBurn() {
+            return false;
+        }
 
         /**
          * Define que hace cuando golpea

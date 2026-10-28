@@ -3,6 +3,7 @@ package com.mimod.event;
 import com.mimod.MiMod;
 import com.mimod.entity.ModEntities;
 import com.mimod.entity.client.chica.ChicaModel;
+import com.mimod.entity.client.cupcake.CupcakeRenderer;
 import com.mimod.entity.client.rhino.RhinoModel;
 import com.mimod.entity.custom.ChicaEntity;
 import com.mimod.entity.custom.RhinoEntity;
@@ -29,5 +30,13 @@ public class ModEventBusEvents {
     {
         event.put(ModEntities.RHINO.get(), RhinoEntity.createAttributes().build());
         event.put(ModEntities.CHICA.get(), ChicaEntity.createAttributes().build());
+    }
+
+    /**
+     * registra el render del proyectil - cupcake
+     */
+    @SubscribeEvent
+    public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ModEntities.CUPCAKE.get(), CupcakeRenderer::new);
     }
 }
