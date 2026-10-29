@@ -1,6 +1,6 @@
-
 package com.mimod.entity.custom.foxy;
 
+import com.mimod.ModSounds;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -10,8 +10,6 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -46,6 +44,21 @@ public class FoxyEntity extends Monster implements GeoEntity {
                 .add(Attributes.MOVEMENT_SPEED, 0.25)
                 .add(Attributes.ATTACK_DAMAGE, 3.0)
                 .add(Attributes.FOLLOW_RANGE, 35.0);
+    }
+
+    @Override
+    public boolean doHurtTarget(net.minecraft.world.entity.Entity target) {
+        boolean success = super.doHurtTarget(target);
+
+        // Si el ataque tuvo éxito y ocurre en el servidor, reproducimos el sonido del jumpscare
+        if (success && !this.level().isClientSide()) {
+            this.level().playSound(null, this.getX(), this.getY(), this.getZ(),
+                    ModSounds.FOXY_JUMPSCARE.get(),
+                    net.minecraft.sounds.SoundSource.HOSTILE, 1.5F, 1.0F
+            );
+        }
+
+        return success;
     }
 
     @Override

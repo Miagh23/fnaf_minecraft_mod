@@ -1,7 +1,6 @@
 package com.mimod;
 
 import com.mimod.entity.ModEntities;
-import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
@@ -33,8 +32,8 @@ public class MiMod {
       IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
       //Se llama al metodo register de cada clase pasandole el modEventbus
-        ModEntities.register(modEventBus);
-
+      ModEntities.register(modEventBus);
+      ModSounds.register(modEventBus);
 
       ITEMS.register(modEventBus);
     }
