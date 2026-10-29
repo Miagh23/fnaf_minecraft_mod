@@ -2,7 +2,6 @@ package com.mimod.entity;
 
 import com.mimod.MiMod;
 import com.mimod.entity.custom.ChicaEntity;
-import com.mimod.entity.custom.RhinoEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,11 +19,6 @@ public class ModEntities {
     /**
      * Usa la categoría ENTITY_TYPES para crear/registrar el mob como RHINO y define su tamaño.
      */
-    public static final RegistryObject<EntityType<RhinoEntity>> RHINO =
-            ENTITY_TYPES.register("rinoceronte",()->
-                    EntityType.Builder.of(RhinoEntity::new, MobCategory.CREATURE)
-                            .sized(1.5f, 1.5f).build("rinoceronte"));
-
 
     public static final RegistryObject<EntityType<ChicaEntity>> CHICA =
             ENTITY_TYPES.register("chica", () ->

@@ -22,11 +22,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.Animation;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class ChicaEntity extends Monster implements RangedAttackMob
+public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
 {
     //El ataque del cupcake
 
@@ -46,9 +54,14 @@ public class ChicaEntity extends Monster implements RangedAttackMob
     private int attackCooldown;
     private boolean fleeing;
 
-    //TEMPORAL PARA ANIMACIONES
-    public final AnimationState idleAnimationState = new AnimationState();
-    private int idleAnimationTimeout = 0;
+    //GECKOLIB: caché que guarda el estado de las animaciones de esta entidad
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    //GECKOLIB: animaciones (los nombres deben coincidir con los del archivo .animation.json)
+    private static final RawAnimation SHOWTIME_ANIM = RawAnimation.begin().thenLoop("animation.chica.showtime");
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.chica.walk");
+    private static final RawAnimation AGRESSION_ANIM = RawAnimation.begin().thenLoop("animation.chica.agression");
+    private static final RawAnimation JUMPSCARE_ANIM = RawAnimation.begin().then("jumpscare", Animation.LoopType.PLAY_ONCE);
 
 
     /**
@@ -119,6 +132,9 @@ public class ChicaEntity extends Monster implements RangedAttackMob
         //solo lo ejecuta en el server
         if (level.isClientSide) return;
 
+        //GECKOLIB: lanza la animación de jumpscare (se sincroniza con los clientes)
+        this.triggerAnim("attack_controller", "jumpscare");
+
         // Origen: un poco por delante de la cara de Chica
         Vec3 view = this.getViewVector(1.0F);
         double startX = this.getX() + view.x * 2.0D;
@@ -166,11 +182,11 @@ public class ChicaEntity extends Monster implements RangedAttackMob
     @Override
     public void aiStep() {
 
-            if (this.isSunBurnTick()) {
-                this.igniteForSeconds(8.0F);
-            }
+        if (this.isSunBurnTick()) {
+            this.igniteForSeconds(8.0F);
+        }
 
-            super.aiStep();
+        super.aiStep();
     }
 
     /**
@@ -196,23 +212,33 @@ public class ChicaEntity extends Monster implements RangedAttackMob
 
 
     /**
-     * TEMPORAL PARA ANIMACIONES
-     * Añade la animación del mob. Va restando ticks hasta que llega a 0,
-     * entonces activa la animación y resetea el contador.
-     * Es importante que el contador de ticks coincida con la longitud
-     * en ticks de la animación para que se genere un bucle limpio.
+     * GECKOLIB: registra los controladores de animación.
+     * - "movement": quieto -> showtime, caminando -> walk, persiguiendo (agresiva) -> agression.
+     * - "attack_controller": reproduce el jumpscare una sola vez cuando se dispara con triggerAnim().
+     * El orden importa: el del jumpscare va el último para que se superponga al de movimiento.
      */
-    private void setupAnimationStates()
-    {
-        if(this.idleAnimationTimeout<=0)
-        {
-            this.idleAnimationTimeout=40;
-            this.idleAnimationState.start(this.tickCount);
-        }
-        else
-        {
-            --this.idleAnimationTimeout;
-        }
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "movement", 5, state -> {
+            if (state.isMoving()) {
+                if (this.isAggressive()) {
+                    return state.setAndContinue(AGRESSION_ANIM);
+                }
+                return state.setAndContinue(WALK_ANIM);
+            }
+            return state.setAndContinue(SHOWTIME_ANIM);
+        }));
+
+        controllers.add(new AnimationController<>(this, "attack_controller", 0, state -> PlayState.STOP)
+                .triggerableAnim("jumpscare", JUMPSCARE_ANIM));
+    }
+
+    /**
+     * GECKOLIB: devuelve la caché de animaciones de esta entidad.
+     */
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
     static class RangedCupcakeAttackGoal extends Goal {
@@ -264,7 +290,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob
         public void stop() {
             super.stop();
             this.mob.setAggressive(false);
-           this.seeTime=0; //reinicia el contador de visión
+            this.seeTime=0; //reinicia el contador de visión
 
         }
 
@@ -374,7 +400,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob
         private void runAway() {
             LivingEntity target = mob.getTarget();
             Vec3 from = target != null ? target.position() : mob.position();
-                                                 //mob, horizontalRange, verticalRange, positionToAvoid
+            //mob, horizontalRange, verticalRange, positionToAvoid
             Vec3 pos = DefaultRandomPos.getPosAway(mob, 16, 7, from);
             if (pos != null) {
                 mob.getNavigation().moveTo(pos.x, pos.y, pos.z, speed);
@@ -396,19 +422,19 @@ public class ChicaEntity extends Monster implements RangedAttackMob
     /**
      * Hereda de la bola de fuego del ghast, no deja fuego y tiene mayor potencia de explosión.
      */
-        public static class Cupcake extends LargeFireball{
+    public static class Cupcake extends LargeFireball{
         //constructor obligatorio de Minecraft (para el registro en ModEntities)
         public Cupcake(EntityType<? extends LargeFireball> entityType, Level level) {
             super(entityType, level);
         }
         private static final int EXPLOSION_POWER = 1; //explosion de creeper=3 --> le he bajado el daño a uno para ver mejor el funcionamiento
 
-            public Cupcake(Level level, ChicaEntity owner, Vec3 direction) { // lo cambio a ChicaEntity para poder sacar la posición de Chica
-                super(ModEntities.CUPCAKE.get(), level); // para que se use el registro personalizado en lugar del de FireBall
-                this.setOwner(owner); // para saber quién lo ha disparado y así evitar que le dañe
-                this.setPos(owner.getX(), owner.getY(0.5D) + 0.5D, owner.getZ()); // para que salga desde más arriba en vez de desde los pies
-                this.setDeltaMovement(direction.scale(0.5D)); // empuja el proyectil
-            }
+        public Cupcake(Level level, ChicaEntity owner, Vec3 direction) { // lo cambio a ChicaEntity para poder sacar la posición de Chica
+            super(ModEntities.CUPCAKE.get(), level); // para que se use el registro personalizado en lugar del de FireBall
+            this.setOwner(owner); // para saber quién lo ha disparado y así evitar que le dañe
+            this.setPos(owner.getX(), owner.getY(0.5D) + 0.5D, owner.getZ()); // para que salga desde más arriba en vez de desde los pies
+            this.setDeltaMovement(direction.scale(0.5D)); // empuja el proyectil
+        }
         /**
          * para apagar el fuego pero mantener la explosión
          */
@@ -422,19 +448,19 @@ public class ChicaEntity extends Monster implements RangedAttackMob
          * @param result
          */
         @Override
-            protected void onHit(HitResult result) {
-                if (!this.level().isClientSide) {
-                    // El último parámetro 'false' = SIN fuego
-                    this.level().explode(
-                            this,
-                            this.getX(), this.getY(), this.getZ(),
-                            EXPLOSION_POWER,                              // potencia (3 = creeper)
-                            false,                             // false = no genera fuego
-                            Level.ExplosionInteraction.TNT     // indica como interactua con el mundo y que puede destruir/afectar
-                    );
-                    this.discard();
-                }
+        protected void onHit(HitResult result) {
+            if (!this.level().isClientSide) {
+                // El último parámetro 'false' = SIN fuego
+                this.level().explode(
+                        this,
+                        this.getX(), this.getY(), this.getZ(),
+                        EXPLOSION_POWER,                              // potencia (3 = creeper)
+                        false,                             // false = no genera fuego
+                        Level.ExplosionInteraction.TNT     // indica como interactua con el mundo y que puede destruir/afectar
+                );
+                this.discard();
             }
+        }
 
         /**
          * Indica que el proyectil, es decir el cupcake, no se puede dañar.
@@ -442,11 +468,11 @@ public class ChicaEntity extends Monster implements RangedAttackMob
          * @param amount
          * @return
          */
-            @Override
-            public boolean hurt(DamageSource source, float amount) {
-                 return false;
+        @Override
+        public boolean hurt(DamageSource source, float amount) {
+            return false;
         }
-        }
+    }
 
 
     public boolean isFleeing() {
@@ -462,10 +488,3 @@ public class ChicaEntity extends Monster implements RangedAttackMob
     public void setAttackCooldown(int ticks) { this.attackCooldown = ticks; }
 
 }
-
-
-
-
-
-
-

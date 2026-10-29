@@ -1,8 +1,7 @@
 package com.mimod;
 
 import com.mimod.entity.ModEntities;
-import com.mimod.entity.client.chica.ChicaRenderer;
-import com.mimod.entity.client.rhino.RhinoRenderer;
+import com.mimod.entity.client.renderer.chica.ChicaRenderer;
 import com.mimod.entity.custom.ChicaEntity;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -71,7 +70,6 @@ public class MiMod {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-            EntityRenderers.register(ModEntities.RHINO.get(), RhinoRenderer::new);
             EntityRenderers.register(ModEntities.CHICA.get(), ChicaRenderer::new);
         }
     }
