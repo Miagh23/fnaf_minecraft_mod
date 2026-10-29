@@ -248,12 +248,20 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
         private final float attackRadiusSqr;
         private int seeTime;
 
+        //STRAFFING
+        private static final double MAX_RANGE_MOD=0.75;
+        private static final double MIN_RANGE_MOD=0.25;
+        private static final double CHANGE_DIRECTION_CHANCE=0.3;
+        private int strafingTime; //contador de tiempo para el movimiento alante-atras
+        private boolean strafingBackwards;
+
         public RangedCupcakeAttackGoal(ChicaEntity chica, double speedModifier, int seeTimeRequired, float attackRadius) {
             this.mob = chica;
             this.speedModifier = speedModifier;
             this.seeTimeRequired = seeTimeRequired;
             this.attackRadiusSqr = attackRadius * attackRadius; //POR RAZONES TRIGONOMETRICAS SE USAN CUADRADOS PARA ASI EVITAR CALCULAR RAICES
             this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+            this.strafingTime=-1;
         }
 
         @Override
@@ -291,6 +299,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
             super.stop();
             this.mob.setAggressive(false);
             this.seeTime=0; //reinicia el contador de visión
+            this.strafingTime =-1;
 
         }
 
@@ -310,32 +319,60 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
                     this.seeTime = 0;
                 }
 
+
+                // --- Lógica de strafing ---
+                if (this.strafingTime >= 20) {
+
+
+                    // Probabilidad de cambiar entre avanzar/retroceder
+                    if (this.mob.getRandom().nextFloat() < CHANGE_DIRECTION_CHANCE) {
+                        this.strafingBackwards = !this.strafingBackwards;
+                    }
+                    this.strafingTime = 0;
+                }
+
+                if (this.strafingTime > -1) {
+                    // Mantener una distancia prudente: ajusta estos factores a tu gusto
+                    if (distanceToTarget > this.attackRadiusSqr * MAX_RANGE_MOD) {
+                        this.strafingBackwards = false;          // demasiado lejos -> acercarse un poco
+                    } else if (distanceToTarget < this.attackRadiusSqr * MIN_RANGE_MOD) {
+                        this.strafingBackwards = true;           // demasiado cerca -> alejarse
+                    }
+
+                    this.mob.getMoveControl().strafe(
+                            this.strafingBackwards ? -0.5F : 0.5F,
+                            0 //movimiento lateral nulo
+                    );
+                }
+
                 if (hasLineOfSight) {
                     this.seeTime++;
                 } else {
                     this.seeTime--;
                 }
 
-                if (!(distanceToTarget > (double) this.attackRadiusSqr) && this.seeTime >= seeTimeRequired) {
+                if (!(distanceToTarget > (double) this.attackRadiusSqr) && hasLineOfSight) {
                     this.mob.getNavigation().stop();
+                    this.strafingTime++;
 
                 } else {
                     this.mob.getNavigation().moveTo(target, this.speedModifier);
+                    this.strafingTime=-1;
                 }
 
-                this.mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
+                    this.mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
 
 
-                if (hasLineOfSight && distanceToTarget <= this.attackRadiusSqr && this.seeTime >= this.seeTimeRequired) {
+                    if (hasLineOfSight && distanceToTarget <= this.attackRadiusSqr && this.seeTime >= this.seeTimeRequired) {
 
 
-                    this.mob.performRangedAttack(target, 3);
-                    this.mob.setFleeing(true);
+                        this.mob.performRangedAttack(target, 3);
+                        this.mob.setFleeing(true);
 
 
-                }
+                    }
+
             }
-
         }
     }
 
