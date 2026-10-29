@@ -39,13 +39,13 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
     //El ataque del cupcake
 
     //indica si está en modo huida (despues de disparar el cupcake)
-    private static final int MAX_ATTACK_COOLDOWN = 60;
-    private static final int FLEEING_TIME=100;
+    private static final int MAX_ATTACK_COOLDOWN = 20;
+    private static final int FLEEING_TIME=60;
     private static final double HEALTH=20;
     private static final double PLAYER_DETECTION_RANGE=45;
     private static final double MOVEMENT_SPEED=0.35;
-    private static final double FLEEING_SPEED=2f;
-    private static final double CHASE_SPEED_MODIFIER=1.5;
+    private static final double FLEEING_SPEED=1.75f;
+    private static final double CHASE_SPEED_MODIFIER=1.25;
 
 
 
@@ -60,10 +60,10 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
     //GECKOLIB: animaciones (los nombres deben coincidir con los del archivo .animation.json)
     private static final RawAnimation SHOWTIME_ANIM = RawAnimation.begin().thenLoop("animation.chica.showtime");
     private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.chica.walk");
-    private static final RawAnimation AGRESSION_ANIM = RawAnimation.begin().thenLoop("animation.chica.agression");
+    private static final RawAnimation AGRESSION_ANIM = RawAnimation.begin().thenLoop("animation.chica.aggression");
     private static final RawAnimation JUMPSCARE_ANIM = RawAnimation.begin().then("jumpscare", Animation.LoopType.PLAY_ONCE);
 
-
+private boolean lastAggressive=false;
     /**
      *
      * @param monster el mob de chica en cuestión
@@ -220,10 +220,13 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "movement", 5, state -> {
+
+
+            if (this.isAggressive()) {
+                // Agresiva: siempre animación de agresión, se mueva o no (strafing incluido)
+                return state.setAndContinue(AGRESSION_ANIM);
+            }
             if (state.isMoving()) {
-                if (this.isAggressive()) {
-                    return state.setAndContinue(AGRESSION_ANIM);
-                }
                 return state.setAndContinue(WALK_ANIM);
             }
             return state.setAndContinue(SHOWTIME_ANIM);
@@ -231,6 +234,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
 
         controllers.add(new AnimationController<>(this, "attack_controller", 0, state -> PlayState.STOP)
                 .triggerableAnim("jumpscare", JUMPSCARE_ANIM));
+
     }
 
     /**
@@ -250,7 +254,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
 
         //STRAFFING
         private static final double MAX_RANGE_MOD=0.75;
-        private static final double MIN_RANGE_MOD=0.25;
+        private static final double MIN_RANGE_MOD=0.40;
         private static final double CHANGE_DIRECTION_CHANCE=0.3;
         private int strafingTime; //contador de tiempo para el movimiento alante-atras
         private boolean strafingBackwards;
@@ -340,7 +344,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
                     }
 
                     this.mob.getMoveControl().strafe(
-                            this.strafingBackwards ? -0.5F : 0.5F,
+                            this.strafingBackwards ? -1 : 1F,
                             0 //movimiento lateral nulo
                     );
                 }
@@ -360,7 +364,13 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
                     this.strafingTime=-1;
                 }
 
+                //si hay straffing mueve todo el cuerpo, sino la cabeza
+                if (this.strafingTime > -1) {
+                    // Strafing activo: el cuerpo debe encarar al objetivo para que "atrás" sea de verdad alejarse
+                    this.mob.lookAt(target, 30.0F, 30.0F);
+                } else {
                     this.mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
+                }
 
 
                     if (hasLineOfSight && distanceToTarget <= this.attackRadiusSqr && this.seeTime >= this.seeTimeRequired) {
@@ -464,7 +474,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
         public Cupcake(EntityType<? extends LargeFireball> entityType, Level level) {
             super(entityType, level);
         }
-        private static final int EXPLOSION_POWER = 1; //explosion de creeper=3 --> le he bajado el daño a uno para ver mejor el funcionamiento
+        private static final int EXPLOSION_POWER = 5; //explosion de creeper=3 --> le he bajado el daño a uno para ver mejor el funcionamiento
 
         public Cupcake(Level level, ChicaEntity owner, Vec3 direction) { // lo cambio a ChicaEntity para poder sacar la posición de Chica
             super(ModEntities.CUPCAKE.get(), level); // para que se use el registro personalizado en lugar del de FireBall
