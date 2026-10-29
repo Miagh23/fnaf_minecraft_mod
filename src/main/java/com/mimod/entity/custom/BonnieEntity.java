@@ -9,7 +9,8 @@ import net.minecraft.world.level.Level;
  * Una vez en su rango, se dirige a ti hasta acercarse y matarte.
  * Si le miras, se queda quieto.
  * Puedes salir de su rango mientras le miras y volverá a estar wandering.
- * jumpscare + Oneshotea.
+ * jumpscare + quita 5 corazones/10.
+ * Tiene mucho knockback para simular su agresividad -> te empuja mucho para atrás.
  */
 public class BonnieEntity extends Monster {
 
