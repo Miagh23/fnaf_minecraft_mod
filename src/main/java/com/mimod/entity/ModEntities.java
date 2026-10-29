@@ -1,7 +1,7 @@
 package com.mimod.entity;
 
-import com.mimod.entity.custom.FoxyEntity;
 import com.mimod.MiMod;
+import com.mimod.entity.custom.foxy.FoxyEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,12 +20,12 @@ public class ModEntities {
      * Usa la categoría ENTITY_TYPES para crear/registrar el mob como RHINO y define su tamaño.
      */
 
-
-
     public static final RegistryObject<EntityType<FoxyEntity>> FOXY =
             ENTITY_TYPES.register("foxy", () ->
                     EntityType.Builder.of(FoxyEntity::new, MobCategory.MONSTER)
-                            .sized(0.6f, 1.95f).build("foxy"));
+                            .sized(0.6F, 1.8F)
+                            .build("foxy"));
+
 
     /**
      * Registra el mod en la categoría de entity_types
