@@ -86,7 +86,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
                 .add(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED)
                 .add(Attributes.FOLLOW_RANGE, PLAYER_DETECTION_RANGE);
     }
-
+//comentario temproal de ajuste de ramas en github
     /**
      * Define los comportamiento del mob y sus prioridades (cuanto más pequeño el numero, más alta la prioridad).
      * Evita el sol, el agua, mira al jugador y al azar.
