@@ -1,6 +1,7 @@
 package com.mimod.entity;
 
 import com.mimod.MiMod;
+import com.mimod.entity.custom.BonnieEntity;
 import com.mimod.entity.custom.ChicaEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -33,6 +34,12 @@ public class ModEntities {
                             .sized(0.25F, 0.25F)
                             .build("cupcake"));
 
+
+    public static final RegistryObject<EntityType<BonnieEntity>> BONNIE =
+            ENTITY_TYPES.register("bonnie", () ->
+                    EntityType.Builder.of(BonnieEntity::new, MobCategory.MONSTER)
+                            .sized(0.6F, 1.8F) // Escala estándar de monstruo/jugador
+                            .build("bonnie"));
 
     /**
      * Registra el mod en la categoría de entity_types
