@@ -12,8 +12,10 @@ public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, MiMod.MOD_ID);
 
     // Registramos el sonido del jumpscare
+
     public static final RegistryObject<SoundEvent> FOXY_JUMPSCARE = SOUND_EVENTS.register("foxy_jumpscare",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MiMod.MOD_ID, "foxy_jumpscare")));
+
     //Y por cada sonido una linea mas como la de arriba aqui abajo
 
     public static void register(IEventBus eventBus) {
