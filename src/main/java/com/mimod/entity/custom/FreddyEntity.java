@@ -31,14 +31,14 @@ import javax.annotation.Nullable;
  */
 public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
 
-    private static final int MAX_ATTACK_COOLDOWN = 20;
+    private static final int MAX_ATTACK_COOLDOWN = 60;
     private static final int FLEEING_TIME = 20;
     private static final double HEALTH = 20;
     private static final double PLAYER_DETECTION_RANGE = 45;
-    private static final double MOVEMENT_SPEED = 0.35;
+    private static final double MOVEMENT_SPEED = 0.25;
     private static final double FLEEING_SPEED = 1.75f;
-    private static final double CHASE_SPEED_MODIFIER = 1.25;
 
+    private boolean sitting;
     private boolean fleeing;
 
     //GECKOLIB: caché que guarda el estado de las animaciones de esta entidad
@@ -59,6 +59,7 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
     protected FreddyEntity(EntityType<? extends Monster> monster, Level world) {
         super(monster, world);
         this.fleeing=false;
+        this.sitting=false;
     }
 
     @Override
@@ -92,6 +93,8 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
         this.goalSelector.addGoal(2, new FleeSunGoal(this, (double) 1.0F));
 
         this.goalSelector.addGoal(3,new FleeingGoal(this,FLEEING_SPEED));
+
+        this.goalSelector.addGoal(4, new SitAndSingGoal(this));
 
         //dar tumbos
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, (double) 1.0F));
@@ -165,4 +168,6 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
     public int getMaxAttackCooldown() {
         return MAX_ATTACK_COOLDOWN;
     }
+
+
 }
