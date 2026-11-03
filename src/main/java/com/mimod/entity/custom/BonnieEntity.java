@@ -33,7 +33,7 @@ public class BonnieEntity extends Monster implements GeoEntity {
 
     // atributos
     private static final double HEALTH = 20.0;
-    private static final double MOVEMENT_SPEED = 0.7;
+    private static final double MOVEMENT_SPEED = 0.3;
     private static final double DETECTION_RANGE = 35.0;
     private static final double KNOCKBACK_RESISTANCE = 0.5;
 
@@ -52,7 +52,7 @@ public class BonnieEntity extends Monster implements GeoEntity {
                 .add(Attributes.MAX_HEALTH, HEALTH)
                 .add(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED)
                 .add(Attributes.FOLLOW_RANGE, DETECTION_RANGE)
-                .add(Attributes.ATTACK_DAMAGE, 10.0) // que quite 5 corazones (1 corazón = 2 puntos)
+                .add(Attributes.ATTACK_DAMAGE, 8.0) // que quite 4 corazones (1 corazón = 2 puntos)
                 .add(Attributes.KNOCKBACK_RESISTANCE, KNOCKBACK_RESISTANCE);
     }
 
@@ -60,10 +60,19 @@ public class BonnieEntity extends Monster implements GeoEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
+
+        // detecta al jugador
+        this.targetSelector.addGoal(1, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>
+                (this, net.minecraft.world.entity.player.Player.class, true));
+
         // Prioridad 1: la meta personalizada de acecho, congelación por la mirada y ataque (velocidad de persecución: 1.2D)
         this.goalSelector.addGoal(1, new BonnieStalkingGoal(this, 1.2D));
+
         // que deambule tranquilamente cuando no ve a nadie
         this.goalSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal(this, 1.0D));
+
+        // para que mueva la cabeza de vez en cuando al estar quieto
+        this.goalSelector.addGoal(3, new net.minecraft.world.entity.ai.goal.LookAtPlayerGoal(this, net.minecraft.world.entity.player.Player.class, 8.0F));
     }
     /**
      * condición de activación (canUse) --> si tiene un objetivo dentro de su rango
@@ -114,11 +123,13 @@ public class BonnieEntity extends Monster implements GeoEntity {
 
             if (playerIsLookingAtMe) {
                 this.mob.getNavigation().stop(); // si el jugador le mira, Bonnie se congela en el sitio
+                this.mob.setDeltaMovement(0.0D, this.mob.getDeltaMovement().y, 0.0D); // frena su inercia física
+                // dejo la y para que si está saltando, pueda actuar la gravedad y no se quede flotando
             } else {
                 this.mob.getNavigation().moveTo(target, this.speedModifier);  // si el jugador no le mira, le persigue
 
                 // si está a distancia de ataque cuerpo a cuerpo, ejecuta el golpe y el jumpscare
-                if (this.mob.distanceToSqr(target) <= 2.0D) { // distancia de alcance cuerpo a cuerpo
+                if (this.mob.distanceToSqr(target) <= 4.0D) { // distancia de alcance cuerpo a cuerpo
                     this.mob.doHurtTarget(target);
                 }
             }
