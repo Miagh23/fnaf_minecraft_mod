@@ -1,6 +1,8 @@
 package com.mimod.entity.custom;
 
+import com.mimod.Goals.FleeingGoal;
 import com.mimod.entity.ModEntities;
+import com.mimod.interfaces.Fleeing;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
@@ -34,7 +36,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity
+public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity, Fleeing
 {
     //El ataque del cupcake
 
@@ -101,7 +103,7 @@ private boolean lastAggressive=false;
         this.goalSelector.addGoal(2, new FleeSunGoal(this, (double)1.0F));
 
         //huir
-        this.goalSelector.addGoal(3, new FleeingGoal(this, FLEEING_SPEED));
+        this.goalSelector.addGoal(3, new FleeingGoal<ChicaEntity>(this, FLEEING_SPEED));
 
         //atacar
         this.goalSelector.addGoal(4, new RangedCupcakeAttackGoal(this, CHASE_SPEED_MODIFIER, CHASE_SEE_TIME_REQUIRED, RANGE_ATTACK_RADIUS));
@@ -255,6 +257,8 @@ private boolean lastAggressive=false;
         //STRAFFING
         private static final double MAX_RANGE_MOD=0.75;
         private static final double MIN_RANGE_MOD=0.40;
+
+
         private static final double CHANGE_DIRECTION_CHANCE=0.3;
         private int strafingTime; //contador de tiempo para el movimiento alante-atras
         private boolean strafingBackwards;
@@ -386,84 +390,106 @@ private boolean lastAggressive=false;
         }
     }
 
-    /**
-     * El comportamiento de huir. Tiene parametros del mob, su velocidad y el tiempo en ticks de huida restante. (20ticks=1s)
-     */
-    static class FleeingGoal extends Goal {
-        private final ChicaEntity mob;
-        private final double speed;
-        private int fleeTicks;
+//    /**
+//     * El comportamiento de huir. Tiene parametros del mob, su velocidad y el tiempo en ticks de huida restante. (20ticks=1s)
+//     */
+//    static class FleeingGoal extends Goal {
+//        private final ChicaEntity mob;
+//        private final double speed;
+//        private int fleeTicks;
+//
+//        public FleeingGoal(ChicaEntity mob, double speed) {
+//            this.mob = mob;
+//            this.speed = speed;
+//
+//            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
+//        }
+//
+//        /**
+//         * Solo se activa cuando el mob está huyendo.
+//         * @return
+//         */
+//        @Override
+//        public boolean canUse() {
+//            return mob.isFleeing();
+//        }
+//
+//        /**
+//         * Solo sigue activo mientras este en modo huir y mientras le quede tiempo de huida.
+//         * @return
+//         */
+//        @Override
+//        public boolean canContinueToUse() {
+//            return mob.isFleeing() && fleeTicks > 0;
+//        }
+//
+//        /**
+//         * Cuando arranca, inicia el temporizador y ejecuta el método runAway()
+//         */
+//        @Override
+//        public void start() {
+//            fleeTicks = mob.FLEEING_TIME;
+//            runAway();
+//        }
+//
+//        /**
+//         * En cada tick, mientras este comportamiento(goal) este activo, se reduce el tiempo de huida
+//         * y se llama al método runAway() si fuera necesario.
+//         */
+//        @Override
+//        public void tick() {
+//            fleeTicks--;
+//            // Si llegó al destino antes de tiempo, busca otro punto más lejos
+//            if (mob.getNavigation().isDone()) {
+//                runAway();
+//            }
+//        }
+//
+//        /**
+//         * Detecta a su objetivo y huye en una dirección aleatoria de él. Si no puede seguir huyendo en esa dirección, vuelva a calcularla.
+//         */
+//        private void runAway() {
+//            LivingEntity target = mob.getTarget();
+//            Vec3 from = target != null ? target.position() : mob.position();
+//            //mob, horizontalRange, verticalRange, positionToAvoid
+//            Vec3 pos = DefaultRandomPos.getPosAway(mob, 16, 7, from);
+//            if (pos != null) {
+//                mob.getNavigation().moveTo(pos.x, pos.y, pos.z, speed);
+//            }
+//        }
+//
+//        /**
+//         * Cuando acaba este comportamiento, se cambia la bandera
+//         * y se activa el cooldown de ataque (así se evita que ataque instantáneamente despues de huir).
+//         */
+//        @Override
+//        public void stop() {
+//            mob.getNavigation().stop();
+//            mob.setFleeing(false);
+//            mob.setAttackCooldown(mob.MAX_ATTACK_COOLDOWN);
+//        }
+//    }
 
-        public FleeingGoal(ChicaEntity mob, double speed) {
-            this.mob = mob;
-            this.speed = speed;
+    public boolean isFleeing() {
+        return fleeing;
+    }
 
-            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
-        }
+    public void setFleeing(boolean fleeing) {
+        this.fleeing = fleeing;
+    }
 
-        /**
-         * Solo se activa cuando el mob está huyendo.
-         * @return
-         */
-        @Override
-        public boolean canUse() {
-            return mob.isFleeing();
-        }
 
-        /**
-         * Solo sigue activo mientras este en modo huir y mientras le quede tiempo de huida.
-         * @return
-         */
-        @Override
-        public boolean canContinueToUse() {
-            return mob.isFleeing() && fleeTicks > 0;
-        }
+    public boolean canAttack() { return attackCooldown <= 0; }
+    public void setAttackCooldown(int ticks) { this.attackCooldown = ticks; }
 
-        /**
-         * Cuando arranca, inicia el temporizador y ejecuta el método runAway()
-         */
-        @Override
-        public void start() {
-            fleeTicks = mob.FLEEING_TIME;
-            runAway();
-        }
+    @Override
+    public int getFleeingTime() {
+        return FLEEING_TIME;
+    }
 
-        /**
-         * En cada tick, mientras este comportamiento(goal) este activo, se reduce el tiempo de huida
-         * y se llama al método runAway() si fuera necesario.
-         */
-        @Override
-        public void tick() {
-            fleeTicks--;
-            // Si llegó al destino antes de tiempo, busca otro punto más lejos
-            if (mob.getNavigation().isDone()) {
-                runAway();
-            }
-        }
-
-        /**
-         * Detecta a su objetivo y huye en una dirección aleatoria de él. Si no puede seguir huyendo en esa dirección, vuelva a calcularla.
-         */
-        private void runAway() {
-            LivingEntity target = mob.getTarget();
-            Vec3 from = target != null ? target.position() : mob.position();
-            //mob, horizontalRange, verticalRange, positionToAvoid
-            Vec3 pos = DefaultRandomPos.getPosAway(mob, 16, 7, from);
-            if (pos != null) {
-                mob.getNavigation().moveTo(pos.x, pos.y, pos.z, speed);
-            }
-        }
-
-        /**
-         * Cuando acaba este comportamiento, se cambia la bandera
-         * y se activa el cooldown de ataque (así se evita que ataque instantáneamente despues de huir).
-         */
-        @Override
-        public void stop() {
-            mob.getNavigation().stop();
-            mob.setFleeing(false);
-            mob.setAttackCooldown(mob.MAX_ATTACK_COOLDOWN);
-        }
+    @Override
+    public int getMaxAttackCooldown() {
+        return MAX_ATTACK_COOLDOWN;
     }
 
     /**
@@ -522,16 +548,6 @@ private boolean lastAggressive=false;
     }
 
 
-    public boolean isFleeing() {
-        return fleeing;
-    }
 
-    public void setFleeing(boolean fleeing) {
-        this.fleeing = fleeing;
-    }
-
-
-    public boolean canAttack() { return attackCooldown <= 0; }
-    public void setAttackCooldown(int ticks) { this.attackCooldown = ticks; }
 
 }
