@@ -2,10 +2,18 @@ package com.mimod.entity.custom;
 
 import com.mimod.Goals.FleeingGoal;
 import com.mimod.interfaces.Fleeing;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -23,10 +31,14 @@ import software.bernie.geckolib.animation.Animation;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+
 import javax.annotation.Nullable;
+import java.util.EnumSet;
 
 /**
- * Se sienta y se pone a cnatar el hoar hoar hoar. Durante ese tiempo le da ceguera y mareo al jugador.
+ * Primero le provoca ceguera y nausea al jugador, además de que sale el sonido.
+ * Despues huye ligeramente del jugador.
+ * Se sienta y se pone a cantar el hoar hoar hoar.
  * El jugador tiene que huir de su rango o matarlo, si no lo hace muere entre terribles circunstancias.
  */
 public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
@@ -37,9 +49,13 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
     private static final double PLAYER_DETECTION_RANGE = 45;
     private static final double MOVEMENT_SPEED = 0.25;
     private static final double FLEEING_SPEED = 1.75f;
+    private static final int BLIND_COOLDOWN_TIME = 20 * 20;
 
     private boolean sitting;
     private boolean fleeing;
+    private int blindCooldown;
+
+    private SitAndSingGoal singGoal; //referencia al goal de SitAndSing para llamarlo desde la propia entidad
 
     //GECKOLIB: caché que guarda el estado de las animaciones de esta entidad
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -56,7 +72,7 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
     private static final RawAnimation JUMPSCARE_ANIM = RawAnimation.begin().then("jumpscare", Animation.LoopType.PLAY_ONCE);
 
 
-    protected FreddyEntity(EntityType<? extends Monster> monster, Level world) {
+    public FreddyEntity(EntityType<? extends Monster> monster, Level world) {
         super(monster, world);
         this.fleeing=false;
         this.sitting=false;
@@ -84,6 +100,7 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
                 .add(Attributes.FOLLOW_RANGE, PLAYER_DETECTION_RANGE);
     }
 
+    @Override
     protected void registerGoals() {
         //flotar en agua
         this.goalSelector.addGoal(0, new FloatGoal(this));
@@ -92,18 +109,21 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
         this.goalSelector.addGoal(1, new RestrictSunGoal(this));
         this.goalSelector.addGoal(2, new FleeSunGoal(this, (double) 1.0F));
 
-        this.goalSelector.addGoal(3,new FleeingGoal(this,FLEEING_SPEED));
+        this.goalSelector.addGoal(3, new BlindPlayerGoal(this));
 
-        this.goalSelector.addGoal(4, new SitAndSingGoal(this));
+        this.goalSelector.addGoal(4,new FleeingGoal(this,FLEEING_SPEED));
+
+        this.singGoal= new SitAndSingGoal(this); //Se guarda la referencia para llamarlo desde el die de la entidad
+        this.goalSelector.addGoal(5,singGoal);
 
         //dar tumbos
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, (double) 1.0F));
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, (double) 1.0F));
 
         //mirar al jugador
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8.0F));
 
         //mirar alrededor
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
 
         //fijar el objetivo en le jugador. SOLO FUNCIONA CON EL JUGADOR
@@ -140,9 +160,31 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
             this.igniteForSeconds(8.0F);
         }
 
+        if (blindCooldown > 0) blindCooldown--;
+
         super.aiStep();
     }
 
+    /**
+     * Elimina los efectos de freddy si este muere.
+     * @param source
+     */
+    @Override
+    public void die(DamageSource source) {
+        super.die(source);
+        if (singGoal != null) singGoal.cleanup(false); // guarda el goal en un campo al registrarlo
+    }
+
+    /**
+     * Elimina los efectos de freddy si despawnea por chuncks, el jugador se desconecta del server, etc.
+     * Para prevenir bugs.
+     * @param reason
+     */
+    @Override
+    public void remove(Entity.RemovalReason reason) {
+        if (singGoal != null) singGoal.cleanup(false);
+        super.remove(reason);
+    }
 
     @Override
     public boolean isFleeing() {
@@ -154,9 +196,17 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
         this.fleeing=fleeing;
     }
 
+    /**
+     * Usaremos este método para cambiar el sitting a true.
+     * @param ticks es lo que devuelve getMaxAttackCooldown
+     */
     @Override
-    public void setAttackCooldown(int ticks) {
-
+    public void setAttackCooldown(int ticks)
+    {
+        if(ticks>0)
+            this.sitting=true;
+        else
+            this.sitting=false;
     }
 
     @Override
@@ -168,6 +218,163 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
     public int getMaxAttackCooldown() {
         return MAX_ATTACK_COOLDOWN;
     }
+
+    private boolean isSitting() {
+        return this.sitting;
+    }
+
+
+    public boolean canBlind() { return blindCooldown <= 0; }
+    public void startBlindCooldown(int ticks) { blindCooldown = ticks; }
+
+    static class BlindPlayerGoal extends Goal{
+
+        private FreddyEntity mob;
+
+        BlindPlayerGoal(FreddyEntity mob)
+        {
+            this.mob=mob;
+        }
+
+        /**
+         * ciega si detecta a un jugador y ni está huyendo o sentado. También que no este en cooldown.
+         * @return
+         */
+        @Override
+        public boolean canUse() {
+            return this.mob.getTarget() != null &&
+                    !this.mob.isFleeing() &&
+                    !mob.isSitting() &&
+                    this.mob.canBlind();
+        }
+
+        /**
+         * Solo se ejecuta una vez asi que no hace falta el tick.
+         * Al cambiarse el fleeing a true, no se vuelve a ejecutar y se pasa a fleeingGoal.
+         */
+        @Override
+        public void start() {
+            LivingEntity target = mob.getTarget();
+            target.addEffect(new MobEffectInstance(MobEffects.CONFUSION, MobEffectInstance.INFINITE_DURATION, 0, false, false));
+            target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MobEffectInstance.INFINITE_DURATION, 0, false, false));
+            mob.setFleeing(true);
+        }
+    }
+
+    static class SitAndSingGoal extends Goal
+    {
+
+        // Debe ser > 1, si no el jugador ya empieza "fuera" del radio y el goal termina al instante
+        public static double RADIUS_MODIFIER = 1.5D;
+
+        private static final int COUNTDOWN_TICKS = 20 * 30;   // tiempo hasta matar
+        private static final double SONG_PITCH =1.0f; //menos de 1 es slowed, más es nightcore
+        private static final double SONG_SECONDS = 12.0D; // duración exacta del .ogg
+
+        // duración real de tu .ogg. Se divide entre el pitch ya que afecta la velocidad y se multiplica por los 20 ticks.
+        private static final int SONG_LENGTH_TICKS = (int) Math.round(SONG_SECONDS * 20.0D / SONG_PITCH);
+
+
+
+        private FreddyEntity mob;
+        private LivingEntity player;
+        private double maxDistSqr;
+        private int countdown;
+        private int songTimer;
+        private float songRange;
+
+        SitAndSingGoal(FreddyEntity mob)
+        {
+            this.mob=mob;
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
+        }
+        @Override
+        public boolean canUse() {
+            return this.mob.getTarget() != null && mob.isSitting();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            // Usamos 'player' guardado, NO getTarget(): el targetSelector puede poner el target
+            // a null cuando el jugador se aleja de follow_range, y ahí se nos escaparía sin limpiar.
+            return mob.isAlive()
+                    && player != null
+                    && player.isAlive()
+                    && mob.distanceToSqr(player) <= maxDistSqr;
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true; // para que el contador cuente tick a tick
+        }
+
+
+        @Override
+        public void start() {
+            player = mob.getTarget();
+            // distanceToSqr devuelve distancia al cuadrado, por eso el modificador también va al cuadrado
+            maxDistSqr = mob.distanceToSqr(player) * RADIUS_MODIFIER * RADIUS_MODIFIER;
+            countdown = COUNTDOWN_TICKS;
+            songTimer = 0;
+
+            /*Calcula el volumen y rango de la cancion en funcion del rango de escape para que coincida.
+             Cada unidad de "volumen" corresponde a 16 bloques. El mínimo es 1.0, menos de 1 solo baja el volumen y no el rango.
+             Más de 1 no afecta al volumen, solo al rango y son 16 bloques más por unidad.
+             Se hace la raíz cuadrada de la distancia, se divide entre los 16 bloques y si es >1 se elige ese volumen.
+             */
+            songRange= (float) Math.max(1.0D, Math.sqrt(maxDistSqr) / 16.0D);
+            mob.getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            mob.getLookControl().setLookAt(player, 30.0F, 30.0F);
+
+
+//            // algo asi donde estaria la ruta del song
+//            if (songTimer-- <= 0) {
+//                mob.level().playSound(null, mob.getX(), mob.getY(), mob.getZ(),
+//                        ModSounds.FREDDY_SONG.get(), SoundSource.HOSTILE, songRange, SONG_PITCH);
+//                songTimer = SONG_LENGTH_TICKS;
+//            }
+
+            if (--countdown <= 0) {
+                // genericKill ignora creativo, armadura y tótem de la inmortalidad
+                player.hurt(mob.damageSources().genericKill(), Float.MAX_VALUE);
+            }
+        }
+
+        /**
+         * Si se llama porque el jugador escapa se vuelve true, si no false
+         */
+        @Override
+        public void stop() {
+            boolean escaped = mob.isAlive()
+                    && player != null
+                    && player.isAlive()
+                    && mob.distanceToSqr(player) > maxDistSqr;
+            cleanup(escaped);
+        }
+
+        /** Pública para llamarla también desde FreddyEntity#die(), porque stop() no se invoca si el mob muere. */
+        public void cleanup(boolean escaped) {
+//            if (mob.level() instanceof ServerLevel sl) {
+//                ClientboundStopSoundPacket pkt = new ClientboundStopSoundPacket(
+//                        ModSounds.FREDDY_SONG.get().getLocation(), SoundSource.HOSTILE);
+//                for (ServerPlayer p : sl.players()) p.connection.send(pkt);
+//            }
+            if (player != null) {
+                player.removeEffect(MobEffects.CONFUSION);
+                player.removeEffect(MobEffects.BLINDNESS);
+                player = null;
+            }
+            mob.setAttackCooldown(-1); //-1 indica false para el sitting si no, canUse() sería true otra vez y reiniciaría el goal
+            if (escaped) mob.startBlindCooldown(BLIND_COOLDOWN_TIME);
+        }
+
+    }
+
+
 
 
 }

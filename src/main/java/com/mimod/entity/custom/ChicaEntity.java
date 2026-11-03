@@ -65,12 +65,7 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity, 
     private static final RawAnimation AGRESSION_ANIM = RawAnimation.begin().thenLoop("animation.chica.aggression");
     private static final RawAnimation JUMPSCARE_ANIM = RawAnimation.begin().then("jumpscare", Animation.LoopType.PLAY_ONCE);
 
-private boolean lastAggressive=false;
-    /**
-     *
-     * @param monster el mob de chica en cuestión
-     * @param world el mundo
-     */
+
     public ChicaEntity(EntityType<? extends ChicaEntity> monster, Level world) {
 
         super(monster, world);
@@ -101,6 +96,7 @@ private boolean lastAggressive=false;
         //evitar el sol
         this.goalSelector.addGoal(1, new RestrictSunGoal(this));
         this.goalSelector.addGoal(2, new FleeSunGoal(this, (double)1.0F));
+
 
         //huir
         this.goalSelector.addGoal(3, new FleeingGoal<ChicaEntity>(this, FLEEING_SPEED));
