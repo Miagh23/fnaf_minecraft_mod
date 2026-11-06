@@ -2,6 +2,7 @@ package com.mimod.entity;
 
 import com.mimod.MiMod;
 import com.mimod.entity.custom.ChicaEntity;
+import com.mimod.entity.custom.FreddyEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -19,6 +20,13 @@ public class ModEntities {
     /**
      * Usa la categoría ENTITY_TYPES para crear/registrar el mob como RHINO y define su tamaño.
      */
+
+    public static final RegistryObject<EntityType<FreddyEntity>> FREDDY =
+            ENTITY_TYPES.register("freddy", () ->
+                    EntityType.Builder.of(FreddyEntity::new, MobCategory.MONSTER)
+                            //el primer numero es el ancho y largo (siempre es un cuadrado), el segundo la altura
+                            .sized(0.6F, 1.8F)//el jugador y zombie tiene esta escala.
+                            .build("freddy"));
 
     public static final RegistryObject<EntityType<ChicaEntity>> CHICA =
             ENTITY_TYPES.register("chica", () ->

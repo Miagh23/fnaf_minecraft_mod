@@ -1,9 +1,13 @@
 package com.mimod.entity.custom;
 
 import com.mimod.Goals.FleeingGoal;
+import com.mimod.ModSounds;
 import com.mimod.interfaces.Fleeing;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,9 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.Animation;
-import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 
@@ -51,8 +53,13 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
     private static final double FLEEING_SPEED = 1.75f;
     private static final int BLIND_COOLDOWN_TIME = 20 * 20;
 
-    private boolean sitting;
-    private boolean fleeing;
+    // private boolean sitting pero que se guarde en servidor;
+    private static final EntityDataAccessor<Boolean> DATA_SITTING =
+            SynchedEntityData.defineId(FreddyEntity.class, EntityDataSerializers.BOOLEAN);
+    //private boolean fleeing pero que se guarde en servidor;
+    private static final EntityDataAccessor<Boolean> DATA_FLEEING =
+            SynchedEntityData.defineId(FreddyEntity.class, EntityDataSerializers.BOOLEAN);
+
     private int blindCooldown;
 
     private SitAndSingGoal singGoal; //referencia al goal de SitAndSing para llamarlo desde la propia entidad
@@ -65,21 +72,46 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
     private static final RawAnimation POSE_ANIM = RawAnimation.begin().thenLoop("animation.freddyfazbear.pose");
     private static final RawAnimation STAGE_ANIM = RawAnimation.begin().thenLoop("animation.freddyfazbear.stage");
     private static final RawAnimation NEW_ANIM = RawAnimation.begin().thenLoop("animation.freddyfazbear.new");
-    private static final RawAnimation SING_ANIM = RawAnimation.begin().thenLoop("animation.freddyfazbear.signpose"); //ESTA MAL ESCRITO EN EL JSON TAMBIEN
+    private static final RawAnimation SING_ANIM = RawAnimation.begin().thenLoop ("animation.freddyfazbear.signpose"); //ESTA MAL ESCRITO EN EL JSON TAMBIEN
     private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.freddyfazbear.walk");
-    private static final RawAnimation AGGRESION_ANIM = RawAnimation.begin().thenLoop("animation.freddyfazbear.aggression");
+    private static final RawAnimation AGGRESSION_ANIM = RawAnimation.begin().thenLoop("animation.freddyfazbear.aggression");
     private static final RawAnimation SIT_ANIM = RawAnimation.begin().thenLoop("animation.freddyfazbear.sit");
     private static final RawAnimation JUMPSCARE_ANIM = RawAnimation.begin().then("jumpscare", Animation.LoopType.PLAY_ONCE);
 
-
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_SITTING, false);
+        builder.define(DATA_FLEEING, false);
+    }
     public FreddyEntity(EntityType<? extends Monster> monster, Level world) {
         super(monster, world);
-        this.fleeing=false;
-        this.sitting=false;
+        //this.fleeing=false;
+        //this.sitting=false;
+        this.blindCooldown=10;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+
+        controllerRegistrar.add(new AnimationController<>(this, "movement", 5, state -> {
+
+
+            if (this.isSitting()) {
+                // Agresiva: siempre animación de agresión, se mueva o no (strafing incluido)
+                return state.setAndContinue(SIT_ANIM);
+            }
+            if (this.isFleeing()) {
+                return state.setAndContinue(AGGRESSION_ANIM);
+            }
+            if(state.isMoving())
+                return state.setAndContinue(WALK_ANIM);
+
+            return state.setAndContinue(STAGE_ANIM);
+        }));
+
+        controllerRegistrar.add(new AnimationController<>(this, "attack_controller", 0, state -> PlayState.STOP)
+                .triggerableAnim("jumpscare", JUMPSCARE_ANIM));
 
     }
 
@@ -188,12 +220,12 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
 
     @Override
     public boolean isFleeing() {
-        return this.fleeing;
+        return this.entityData.get(DATA_FLEEING);
     }
 
     @Override
     public void setFleeing(boolean fleeing) {
-        this.fleeing=fleeing;
+        this.entityData.set(DATA_FLEEING, fleeing);
     }
 
     /**
@@ -203,10 +235,7 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
     @Override
     public void setAttackCooldown(int ticks)
     {
-        if(ticks>0)
-            this.sitting=true;
-        else
-            this.sitting=false;
+        this.entityData.set(DATA_SITTING, ticks > 0);
     }
 
     @Override
@@ -220,7 +249,7 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
     }
 
     private boolean isSitting() {
-        return this.sitting;
+        return this.entityData.get(DATA_SITTING);
     }
 
 
@@ -267,9 +296,9 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
         // Debe ser > 1, si no el jugador ya empieza "fuera" del radio y el goal termina al instante
         public static double RADIUS_MODIFIER = 1.5D;
 
-        private static final int COUNTDOWN_TICKS = 20 * 30;   // tiempo hasta matar
-        private static final double SONG_PITCH =1.0f; //menos de 1 es slowed, más es nightcore
-        private static final double SONG_SECONDS = 12.0D; // duración exacta del .ogg
+        private static final int COUNTDOWN_TICKS = 20 * 10;   // tiempo hasta matar
+        private static final double SONG_PITCH =0.8f; //menos de 1 es slowed, más es nightcore
+        private static final double SONG_SECONDS = 6.1D; // duración exacta del .ogg
 
         // duración real de tu .ogg. Se divide entre el pitch ya que afecta la velocidad y se multiplica por los 20 ticks.
         private static final int SONG_LENGTH_TICKS = (int) Math.round(SONG_SECONDS * 20.0D / SONG_PITCH);
@@ -332,11 +361,11 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
 
 
 //            // algo asi donde estaria la ruta del song
-//            if (songTimer-- <= 0) {
-//                mob.level().playSound(null, mob.getX(), mob.getY(), mob.getZ(),
-//                        ModSounds.FREDDY_SONG.get(), SoundSource.HOSTILE, songRange, SONG_PITCH);
-//                songTimer = SONG_LENGTH_TICKS;
-//            }
+            if (songTimer-- <= 0) {
+                mob.level().playSound((Player) null, mob.getX(), mob.getY(), mob.getZ(),
+                        ModSounds.FREDDY_SONG.get(), SoundSource.HOSTILE, songRange, (float) SONG_PITCH);
+                songTimer = SONG_LENGTH_TICKS;
+            }
 
             if (--countdown <= 0) {
                 // genericKill ignora creativo, armadura y tótem de la inmortalidad
@@ -358,11 +387,11 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
 
         /** Pública para llamarla también desde FreddyEntity#die(), porque stop() no se invoca si el mob muere. */
         public void cleanup(boolean escaped) {
-//            if (mob.level() instanceof ServerLevel sl) {
-//                ClientboundStopSoundPacket pkt = new ClientboundStopSoundPacket(
-//                        ModSounds.FREDDY_SONG.get().getLocation(), SoundSource.HOSTILE);
-//                for (ServerPlayer p : sl.players()) p.connection.send(pkt);
-//            }
+            if (mob.level() instanceof ServerLevel sl) {
+              ClientboundStopSoundPacket pkt = new ClientboundStopSoundPacket(
+                       ModSounds.FREDDY_SONG.get().getLocation(), SoundSource.HOSTILE);
+               for (ServerPlayer p : sl.players()) p.connection.send(pkt);
+            }
             if (player != null) {
                 player.removeEffect(MobEffects.CONFUSION);
                 player.removeEffect(MobEffects.BLINDNESS);

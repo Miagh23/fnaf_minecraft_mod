@@ -6,6 +6,7 @@ import com.mimod.entity.client.model.chica.ChicaModel;
 import com.mimod.entity.client.renderer.chica.ChicaRenderer;
 import com.mimod.entity.client.cupcake.CupcakeRenderer;
 import com.mimod.entity.custom.ChicaEntity;
+import com.mimod.entity.custom.FreddyEntity;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,6 +22,7 @@ public class ModEventBusEvents {
     public static void registerAttributes(EntityAttributeCreationEvent event)
     {
         event.put(ModEntities.CHICA.get(), ChicaEntity.createAttributes().build());
+        event.put(ModEntities.FREDDY.get(), FreddyEntity.createAttributes().build());
     }
 
     /**
