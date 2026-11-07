@@ -200,6 +200,23 @@ public class BonnieEntity extends Monster implements GeoEntity {
                 .triggerableAnim("jumpscare", JUMPSCARE_ANIM));
     }
 
+    // que se queme con el sol
+    @Override
+    public void aiStep() {
+        super.aiStep();
+
+        // comprobamos que estamos en el servidor y que Bonnie está vivo
+        if (!this.level().isClientSide && this.isAlive()) {
+            Level level = this.level();
+
+            // si es de día (isDay) y Bonnie está bajo la luz directa del sol (canSeeSky)
+            if (level.isDay() && level.canSeeSky(this.blockPosition())) {
+                // hace que empiece a arder durante 160 ticks (8 segundos)
+                this.setRemainingFireTicks(160);
+            }
+        }
+    }
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
