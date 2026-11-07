@@ -29,6 +29,7 @@ public class BonnieEntity extends Monster implements GeoEntity {
 
     public BonnieEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
+        System.out.println("¡Bonnie ha aparecido en las coordenadas: " + this.blockPosition() + "!");
     }
 
     // atributos
@@ -215,6 +216,32 @@ public class BonnieEntity extends Monster implements GeoEntity {
                 this.setRemainingFireTicks(160);
             }
         }
+    }
+
+    // regla de validación de spawn
+    public static boolean checkBonnieSpawnRules(EntityType<BonnieEntity> entityType,
+                                                net.minecraft.world.level.ServerLevelAccessor level,
+                                                net.minecraft.world.entity.MobSpawnType spawnType,
+                                                net.minecraft.core.BlockPos pos,
+                                                net.minecraft.util.RandomSource random) {
+
+        // 1. Si es de día, se cancela el spawn
+        if (level.getLevel().isDay()) {
+            return false;
+        }
+
+        // 2. Comprobamos si ya hay un Bonnie vivo
+        net.minecraft.server.level.ServerLevel serverLevel = level.getServer().getLevel(level.getLevel().dimension());
+        if (serverLevel != null) {
+            var existingBonnies = serverLevel.getEntitiesOfClass(BonnieEntity.class,
+                    new net.minecraft.world.phys.AABB(-30000, -64, -30000, 30000, 320, 30000)); // define una zona cúbica para mirar ahí si hay un Bonnie
+            if (!existingBonnies.isEmpty()) {
+                return false; // Ya existe uno vivo, prohibido spawnear otro
+            }
+        }
+
+        // 3. Aplica las normas estándar de monstruos (oscuridad en superficie)
+        return Monster.checkMonsterSpawnRules(entityType, level, spawnType, pos, random);
     }
 
     @Override
