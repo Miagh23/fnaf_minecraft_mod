@@ -1,0 +1,18 @@
+{
+  "foxy_jumpscare": {
+    "sounds": [
+      {
+        "name": "mimod:foxy_jumpscare",
+        "stream": false
+      }
+    ]
+  },
+  "freddy_song": {
+    "sounds": [
+      {
+        "name": "mimod:freddy_song",
+        "stream": true
+      }
+    ]
+  }
+}

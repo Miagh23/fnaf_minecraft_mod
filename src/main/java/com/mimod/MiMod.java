@@ -2,6 +2,7 @@ package com.mimod;
 
 import com.mimod.entity.ModEntities;
 import com.mimod.entity.client.renderer.chica.ChicaRenderer;
+import com.mimod.entity.client.renderer.freddy.FreddyRenderer;
 import com.mimod.entity.custom.ChicaEntity;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -36,6 +37,7 @@ public class MiMod {
 
       //Se llama al metodo register de cada clase pasandole el modEventbus
         ModEntities.register(modEventBus);
+        ModSounds.register(modEventBus);
 
 
       ITEMS.register(modEventBus);
@@ -71,6 +73,7 @@ public class MiMod {
         public static void onClientSetup(FMLClientSetupEvent event)
         {
             EntityRenderers.register(ModEntities.CHICA.get(), ChicaRenderer::new);
+            EntityRenderers.register(ModEntities.FREDDY.get(), FreddyRenderer::new);
         }
     }
 
