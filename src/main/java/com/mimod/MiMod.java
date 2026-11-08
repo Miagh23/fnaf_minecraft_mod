@@ -21,7 +21,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 //Este es el archivo del mod en sí
 @Mod(MiMod.MOD_ID)
-public class MiMod {
+blic class MiMod {
     public static final String MOD_ID = "mimod";
 
     //LivingEntity si es una entidad como un mob
