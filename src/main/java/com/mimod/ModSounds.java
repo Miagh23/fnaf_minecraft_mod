@@ -15,12 +15,16 @@ public class ModSounds {
 
     public static final RegistryObject<SoundEvent> FOXY_JUMPSCARE = SOUND_EVENTS.register("foxy_jumpscare",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MiMod.MOD_ID, "foxy_jumpscare")));
+
     public static final RegistryObject<SoundEvent> FREDDY_SONG = SOUND_EVENTS.register("freddy_song",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MiMod.MOD_ID, "freddy_song")));
+
 
     //Y por cada sonido una linea mas como la de arriba aqui abajo
 
     public static void register(IEventBus eventBus) {
         SOUND_EVENTS.register(eventBus);
     }
+
 }
+
