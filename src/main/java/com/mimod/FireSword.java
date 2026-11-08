@@ -7,9 +7,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Tiers;
 
+
 /**
  * Este comentario simboliza la unión entre un grupo de desarrolladores con una pasión y misión, reunir a los animatróncios para poder volverse los verdaderos fnaf nights at freddys
  */
+
 public class FireSword extends SwordItem
 {
     public FireSword(Properties properties)

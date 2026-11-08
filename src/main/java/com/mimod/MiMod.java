@@ -40,6 +40,7 @@ public class MiMod {
         ModSounds.register(modEventBus);
 
 
+
       ITEMS.register(modEventBus);
     }
 
@@ -63,8 +64,12 @@ public class MiMod {
     }
 
     /**
+<<<<<<< HEAD
      * Registra en el cliente los metodos en las clases que tengan el @subscribeEvent y el modelo o que se yo.
      * IMPORTANTE METER TODAS LAS ENTIDADES
+=======
+     * Registra en el cliente los metodos en las clases que tengan el @subscribeEvent
+>>>>>>> dev_foxy
      */
     @Mod.EventBusSubscriber(modid = MOD_ID, bus= Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
@@ -72,8 +77,10 @@ public class MiMod {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
+
             EntityRenderers.register(ModEntities.CHICA.get(), ChicaRenderer::new);
             EntityRenderers.register(ModEntities.FREDDY.get(), FreddyRenderer::new);
+
         }
     }
 

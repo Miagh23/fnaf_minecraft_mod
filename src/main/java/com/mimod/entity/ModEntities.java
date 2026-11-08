@@ -4,6 +4,7 @@ import com.mimod.MiMod;
 import com.mimod.entity.custom.BonnieEntity;
 import com.mimod.entity.custom.ChicaEntity;
 import com.mimod.entity.custom.FreddyEntity;
+import com.mimod.entity.custom.foxy.FoxyEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -48,6 +49,13 @@ public class ModEntities {
                     EntityType.Builder.of(BonnieEntity::new, MobCategory.MONSTER)
                             .sized(0.6F, 1.8F) // Escala estándar de monstruo/jugador
                             .build("bonnie"));
+
+    public static final RegistryObject<EntityType<FoxyEntity>> FOXY =
+            ENTITY_TYPES.register("foxy", () ->
+                    EntityType.Builder.of(FoxyEntity::new, MobCategory.MONSTER)
+                            .sized(0.6F, 1.8F)
+                            .build("foxy"));
+
 
     /**
      * Registra el mod en la categoría de entity_types
