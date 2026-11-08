@@ -3,7 +3,7 @@ package com.mimod;
 import com.mimod.entity.ModEntities;
 import com.mimod.entity.client.renderer.chica.ChicaRenderer;
 import com.mimod.entity.client.renderer.freddy.FreddyRenderer;
-import com.mimod.entity.custom.ChicaEntity;
+import com.mimod.modItems.FoxyHook;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -22,13 +22,28 @@ import net.minecraftforge.registries.RegistryObject;
 //Este es el archivo del mod en sí
 @Mod(MiMod.MOD_ID)
 public class MiMod {
+    /**
+    public static final RegistryObject<Item> FOXYHOOK =
+            ITEMS.register("foxyHook",
+                    () -> new SwordItem(
+                            Tiers.IRON,
+                            new Item.Properties()
+                                    .stacksTo(1)
+                                    .attributes(
+                                            SwordItem.createAttributes(
+                                                    Tiers.IRON, 4, -2.4F
+                                            )
+                                    )
+                    )
+            );
+*/
     public static final String MOD_ID = "mimod";
 
     //LivingEntity si es una entidad como un mob
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
     public static final RegistryObject<Item> FIRE_SWORD=
-            ITEMS.register("firesword",() -> new FireSword(new Item.Properties()));
+            ITEMS.register("firesword",() -> new FoxyHook(new Item.Properties()));
 
     public MiMod()
     {
