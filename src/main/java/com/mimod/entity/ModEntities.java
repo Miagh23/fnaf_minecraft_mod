@@ -1,5 +1,6 @@
 package com.mimod.entity;
 
+
 import com.mimod.MiMod;
 import com.mimod.entity.custom.BonnieEntity;
 import com.mimod.entity.custom.ChicaEntity;
