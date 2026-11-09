@@ -1,5 +1,6 @@
 package com.mimod.entity.custom.foxy;
 
+import com.mimod.MiMod;
 import com.mimod.ModSounds;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -82,11 +83,15 @@ public class FoxyEntity extends Monster implements GeoEntity {
         }
         super.aiStep();
     }
-
+/*Here's where we specify the custom drop-offs*/
     @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean recentlyHit) {
+    protected void dropCustomDeathLoot(ServerLevel level,
+                                       DamageSource source,
+                                       boolean recentlyHit) {
         super.dropCustomDeathLoot(level, source, recentlyHit);
-        this.spawnAtLocation(new ItemStack(Items.CHAIN, 1 + this.random.nextInt(3)));
+
+        this.spawnAtLocation(
+                new ItemStack(com.mimod.MiMod.FOXY_HOOK.get()));
     }
 
     public FoxyEntity(EntityType<? extends FoxyEntity> type, Level level) {

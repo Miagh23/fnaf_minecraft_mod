@@ -530,7 +530,6 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity, 
                 this.discard();
             }
         }
-
         /**
          * Indica que el proyectil, es decir el cupcake, no se puede dañar.
          * @param source
@@ -542,8 +541,4 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity, 
             return false;
         }
     }
-
-
-
-
 }
