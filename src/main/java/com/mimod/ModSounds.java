@@ -19,6 +19,9 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> FREDDY_SONG = SOUND_EVENTS.register("freddy_song",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MiMod.MOD_ID, "freddy_song")));
 
+    public static final RegistryObject<SoundEvent> BONNIE_GUITAR_SFX = SOUND_EVENTS.register("bonnie_guitar_sfx",
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MiMod.MOD_ID, "bonnie_guitar_sfx")));
+
 
     //Y por cada sonido una linea mas como la de arriba aqui abajo
 

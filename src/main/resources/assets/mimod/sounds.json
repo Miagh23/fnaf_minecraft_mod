@@ -14,5 +14,21 @@
         "stream": true
       }
     ]
+  },
+  "bonnie_guitar_sfx": {
+    "sounds": [
+      {
+        "name": "mimod:bonnie_guitar/bonnie_guitar_sound_01",
+        "stream": false
+      },
+      {
+        "name": "mimod:bonnie_guitar/bonnie_guitar_sound_02",
+        "stream": false
+      },
+      {
+        "name": "mimod:bonnie_guitar/bonnie_guitar_sound_03",
+        "stream": false
+      }
+    ]
   }
 }

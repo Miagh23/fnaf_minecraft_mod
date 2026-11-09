@@ -8,7 +8,7 @@ public class FoxyModel extends GeoModel<FoxyEntity> {
 
     @Override
     public ResourceLocation getModelResource(FoxyEntity animatable) {
-        return ResourceLocation.fromNamespaceAndPath("mimod", "geo/foxy.geo.json");
+        return ResourceLocation.fromNamespaceAndPath("mimod", "geo/foxy/foxy.geo.json");
     }
 
     @Override
@@ -18,6 +18,6 @@ public class FoxyModel extends GeoModel<FoxyEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(FoxyEntity animatable) {
-        return ResourceLocation.fromNamespaceAndPath("mimod", "animations/foxy.animation.json");
+        return ResourceLocation.fromNamespaceAndPath("mimod", "animations/foxy/foxy.animation.json");
     }
 }

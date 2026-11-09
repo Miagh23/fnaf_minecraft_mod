@@ -3,6 +3,7 @@ package com.mimod;
 import com.mimod.entity.ModEntities;
 import com.mimod.entity.client.renderer.chica.ChicaRenderer;
 import com.mimod.entity.client.renderer.freddy.FreddyRenderer;
+import com.mimod.modItems.BonnieGuitar;
 import com.mimod.modItems.FoxyHook;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -36,6 +37,10 @@ public class MiMod {
             ITEMS.register("foxy_hook",
                     () -> new FoxyHook(new Item.Properties()));
 
+    public static final RegistryObject<Item> BONNIE_GUITAR =
+            ITEMS.register("bonnie_guitar",
+                    () -> new BonnieGuitar(new Item.Properties()));
+
     public MiMod()
     {
        //Se define el event bus
@@ -58,6 +63,7 @@ public class MiMod {
         {
             event.accept(FIRE_SWORD.get());
             event.accept(FOXY_HOOK.get());
+            event.accept(BONNIE_GUITAR.get());
         }
     }
 
