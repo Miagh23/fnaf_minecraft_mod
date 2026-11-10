@@ -43,16 +43,5 @@ public class ModEventBusEvents {
         event.registerEntityRenderer(ModEntities.FREDDY.get(), FreddyRenderer::new);
         event.registerEntityRenderer(ModEntities.FOXY.get(), FoxyRenderer::new);
     }
-
-    @SubscribeEvent
-    public static void registerSpawnPlacements(net.minecraftforge.event.entity.SpawnPlacementRegisterEvent event) { // Escucha el evento de Forge para registrar dónde y cuándo aparecen las entidades
-        event.register( // registra las condiciones de spawn
-                ModEntities.BONNIE.get(), // la entidad afectada
-                net.minecraft.world.entity.SpawnPlacementTypes.ON_GROUND, // debe aparecer apoyado sobre bloques sólidos en el suelo
-                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, // evita que spawnee encima de las hojas de los árboles
-                BonnieEntity::checkBonnieSpawnRules, // Vincula la función personalizada de validación programada en BonnieEntity
-                net.minecraftforge.event.entity.SpawnPlacementRegisterEvent.Operation.REPLACE // Indica que reemplazará cualquier regla predeterminada previa
-        );
-    }
 }
 
