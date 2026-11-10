@@ -1,0 +1,93 @@
+{
+	"format_version": "26.3",
+	"credit": "Made with Blockbench",
+	"texture_size": [128, 128],
+	"textures": {
+		"0": "mimod:item/cupcake_plate"
+	},
+	"elements": [
+		{
+			"name": "CupcakeTop",
+			"from": [5.32143, 3.77857, 5.47143],
+			"to": [10.32143, 7.77857, 10.47143],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 6, 8]},
+			"faces": {
+				"north": {"uv": [3, 6.25, 3.625, 6.75], "texture": "#0"},
+				"east": {"uv": [2.375, 6.25, 3, 6.75], "texture": "#0"},
+				"south": {"uv": [4.25, 6.25, 4.875, 6.75], "texture": "#0"},
+				"west": {"uv": [2.375, 6.25, 3, 6.75], "texture": "#0"},
+				"up": {"uv": [3.625, 6.25, 3, 5.625], "texture": "#0"},
+				"down": {"uv": [4.25, 5.625, 3.625, 6.25], "texture": "#0"}
+			}
+		},
+		{
+			"name": "MrCupcake",
+			"from": [6.07143, 1.02857, 5.97143],
+			"to": [10.07143, 4.02857, 9.97143],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8.5, 2, 8]},
+			"faces": {
+				"north": {"uv": [5, 7.5, 5.5, 7.875], "texture": "#0"},
+				"east": {"uv": [4.5, 7.5, 5, 7.875], "texture": "#0"},
+				"south": {"uv": [6, 7.5, 6.5, 7.875], "texture": "#0"},
+				"west": {"uv": [5.5, 7.5, 6, 7.875], "texture": "#0"},
+				"up": {"uv": [5.5, 7.5, 5, 7], "texture": "#0"},
+				"down": {"uv": [6, 7, 5.5, 7.5], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Plate",
+			"from": [4, 0, 3.97143],
+			"to": [12, 1, 11.97143],
+			"rotation": {"angle": 0, "axis": "z", "origin": [11.5, 4, 7.97143]},
+			"faces": {
+				"north": {"uv": [1, 6.625, 1.125, 7.625], "texture": "#0"},
+				"east": {"uv": [0, 6.625, 1, 7.625], "texture": "#0"},
+				"south": {"uv": [2.125, 6.625, 2.25, 7.625], "texture": "#0"},
+				"west": {"uv": [1.125, 5.625, 1.25, 6.625], "texture": "#0"},
+				"up": {"uv": [1.125, 7.625, 0, 6.625], "texture": "#0"},
+				"down": {"uv": [2.125, 6.625, 1.125, 7.625], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [-128.1, 88.05, 125.98],
+			"translation": [0, 8, 0.25]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [-3.67, -88.42, -2.5],
+			"translation": [0, 8, 0.25]
+		},
+		"firstperson_righthand": {
+			"rotation": [6.23, 28.01, -15.25],
+			"translation": [2, 6.25, 0]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-176.91, -30.21, -164.27],
+			"translation": [2.5, 6.25, -0.5]
+		},
+		"ground": {
+			"translation": [0, 4.25, 0]
+		},
+		"gui": {
+			"rotation": [0, 74.25, 0],
+			"translation": [0, 2.25, 0]
+		},
+		"fixed": {
+			"rotation": [0, -88, 0],
+			"translation": [0, 2.75, -1.25]
+		},
+		"on_shelf": {
+			"rotation": [0, 89.75, 0]
+		}
+	},
+	"groups": [
+		{
+			"name": "MainCharacter",
+			"origin": [8, 6, 8],
+			"scope": 0,
+			"color": 0,
+			"children": [0, 1, 2]
+		}
+	]
+}

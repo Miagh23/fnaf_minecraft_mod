@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " T ",
+    "SNS",
+    "HMH"
+  ],
+  "key": {
+    "T": {
+      "item": "minecraft:torch"
+    },
+    "S": {
+      "item": "minecraft:sugar"
+    },
+    "N": {
+      "item": "minecraft:tnt"
+    },
+    "H": {
+      "item": "minecraft:egg"
+    },
+    "M": {
+      "item": "minecraft:milk_bucket"
+    }
+  },
+  "result": {
+    "id": "mimod:cupcake",
+    "count": 1
+  }
+}
