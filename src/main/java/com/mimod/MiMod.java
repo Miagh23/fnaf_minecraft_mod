@@ -6,6 +6,7 @@ import com.mimod.entity.client.renderer.freddy.FreddyRenderer;
 import com.mimod.modItems.BonnieGuitar;
 import com.mimod.modItems.CupcakePlate;
 import com.mimod.modItems.FoxyHook;
+import com.mimod.modItems.FreddyMask;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -43,6 +44,10 @@ public class MiMod {
     public static final RegistryObject<Item> BONNIE_GUITAR =
             ITEMS.register("bonnie_guitar",
                     () -> new BonnieGuitar(new Item.Properties()));
+
+    public static final RegistryObject<Item> FREDDY_MASK =
+            ITEMS.register("freddy_mask",
+                    () -> new FreddyMask(new Item.Properties()));
 
     public static final RegistryObject<Item> CUPCAKE_PLATE =
             ITEMS.register("cupcake_plate",

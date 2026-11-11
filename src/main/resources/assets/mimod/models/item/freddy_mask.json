@@ -3,7 +3,7 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "freddy_mask"
+		"0": "mimod:item/freddy_mask"
 	},
 	"elements": [
 		{
@@ -52,8 +52,7 @@
 			"name": "Head",
 			"from": [4, 8.63117, 4.18866],
 			"to": [12, 9.63117, 4.18866],
-			"rotation": {"x": 50, "y": 0, "z": 0, "origin": [8, 8.23117, 3.38866]},
-			"faces": {
+			"rotation": {"angle": 45, "axis": "x", "origin": [8, 8.23117, 3.38866]},			"faces": {
 				"north": {"uv": [3, 2.5, 4, 2.625], "texture": "#0"},
 				"east": {"uv": [3, 2.5, 3, 2.625], "texture": "#0"},
 				"south": {"uv": [4, 2.5, 5, 2.625], "texture": "#0"},
@@ -220,7 +219,7 @@
 			"name": "endoi_jaw",
 			"from": [7, 1.71836, 5.1809],
 			"to": [9, 2.71836, 7.1809],
-			"rotation": {"angle": -10, "axis": "x", "origin": [8.5, 2.46836, 6.3809]},
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8.5, 2.46836, 6.3809]},
 			"faces": {
 				"north": {"uv": [4.25, 5.75, 4.5, 5.875], "texture": "#0"},
 				"east": {"uv": [4, 5.75, 4.25, 5.875], "texture": "#0"},
@@ -234,7 +233,7 @@
 			"name": "endoi_jaw",
 			"from": [6.5, 1.26069, 5.06468],
 			"to": [9.5, 2.26069, 9.06468],
-			"rotation": {"angle": -10, "axis": "x", "origin": [8, 2.01069, 6.66468]},
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 2.01069, 6.66468]},
 			"faces": {
 				"north": {"uv": [4.875, 8.5, 5.25, 8.625], "texture": "#0"},
 				"east": {"uv": [4.375, 8.5, 4.875, 8.625], "texture": "#0"},
@@ -262,7 +261,7 @@
 			"name": "RightEar",
 			"from": [10.5068, 8.10867, 6.5],
 			"to": [13.5068, 12.10867, 6.5],
-			"rotation": {"angle": -37.5, "axis": "z", "origin": [12, 10, 7]},
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [12, 10, 7]},
 			"faces": {
 				"north": {"uv": [10.25, 9.25, 10.625, 9.875], "texture": "#0"},
 				"east": {"uv": [10.25, 9.25, 10.25, 9.875], "texture": "#0"},
