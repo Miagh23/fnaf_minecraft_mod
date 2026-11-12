@@ -16,6 +16,8 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import com.mimod.entity.custom.CryingChildEntity;
+import com.mimod.entity.client.renderer.cryingchild.CryingChildRenderer;
 
 @Mod.EventBusSubscriber(modid = MiMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEventBusEvents {
@@ -30,6 +32,7 @@ public class ModEventBusEvents {
         event.put(ModEntities.BONNIE.get(), BonnieEntity.createAttributes().build());
         event.put(ModEntities.FREDDY.get(), FreddyEntity.createAttributes().build());
         event.put(ModEntities.FOXY.get(), FoxyEntity.createAttributes().build());
+        event.put(ModEntities.CRYING_CHILD.get(), CryingChildEntity.createAttributes().build());
     }
 
     /**
@@ -42,6 +45,7 @@ public class ModEventBusEvents {
         event.registerEntityRenderer(ModEntities.BONNIE.get(), BonnieRenderer::new);
         event.registerEntityRenderer(ModEntities.FREDDY.get(), FreddyRenderer::new);
         event.registerEntityRenderer(ModEntities.FOXY.get(), FoxyRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYING_CHILD.get(), CryingChildRenderer::new);
     }
 
     @SubscribeEvent

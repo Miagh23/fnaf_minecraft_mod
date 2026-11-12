@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import com.mimod.entity.custom.CryingChildEntity;
 
 public class ModEntities {
 
@@ -56,6 +57,11 @@ public class ModEntities {
                     EntityType.Builder.of(FoxyEntity::new, MobCategory.MONSTER)
                             .sized(0.6F, 1.8F)
                             .build("foxy"));
+    public static final RegistryObject<EntityType<CryingChildEntity>> CRYING_CHILD =
+            ENTITY_TYPES.register("crying_child", () ->
+                    EntityType.Builder.of(CryingChildEntity::new, MobCategory.MONSTER)
+                            .sized(0.6F, 1.2F)
+                            .build("crying_child"));
 
 
     /**
