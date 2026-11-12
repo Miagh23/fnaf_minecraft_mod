@@ -3,7 +3,10 @@ package com.mimod;
 import com.mimod.entity.ModEntities;
 import com.mimod.entity.client.renderer.chica.ChicaRenderer;
 import com.mimod.entity.client.renderer.freddy.FreddyRenderer;
+import com.mimod.modItems.BonnieGuitar;
+import com.mimod.modItems.CupcakePlate;
 import com.mimod.modItems.FoxyHook;
+import com.mimod.modItems.FreddyMask;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -18,6 +21,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 
 //Este es el archivo del mod en sí
 @Mod(MiMod.MOD_ID)
@@ -35,6 +40,22 @@ public class MiMod {
     public static final RegistryObject<Item> FOXY_HOOK =
             ITEMS.register("foxy_hook",
                     () -> new FoxyHook(new Item.Properties()));
+
+    public static final RegistryObject<Item> BONNIE_GUITAR =
+            ITEMS.register("bonnie_guitar",
+                    () -> new BonnieGuitar(new Item.Properties()));
+
+    public static final RegistryObject<Item> FREDDY_MASK =
+            ITEMS.register("freddy_mask",
+                    () -> new FreddyMask(new Item.Properties()));
+
+    public static final RegistryObject<Item> CUPCAKE_PLATE =
+            ITEMS.register("cupcake_plate",
+                    () -> new CupcakePlate(new Item.Properties()));
+
+    public static final RegistryObject<Item> CUPCAKE =
+            ITEMS.register("cupcake",
+                    () -> new Item(new Item.Properties().stacksTo(64)));
 
     public MiMod()
     {
@@ -58,6 +79,9 @@ public class MiMod {
         {
             event.accept(FIRE_SWORD.get());
             event.accept(FOXY_HOOK.get());
+            event.accept(BONNIE_GUITAR.get());
+            event.accept(CUPCAKE_PLATE.get());
+            event.accept(CUPCAKE.get());
         }
     }
 
@@ -70,26 +94,33 @@ public class MiMod {
     {
 
     }
-
-    /**
-<<<<<<< HEAD
-     * Registra en el cliente los metodos en las clases que tengan el @subscribeEvent y el modelo o que se yo.
-     * IMPORTANTE METER TODAS LAS ENTIDADES
-=======
-     * Registra en el cliente los metodos en las clases que tengan el @subscribeEvent
->>>>>>> dev_foxy
-     */
     @Mod.EventBusSubscriber(modid = MOD_ID, bus= Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
     {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-
             EntityRenderers.register(ModEntities.CHICA.get(), ChicaRenderer::new);
             EntityRenderers.register(ModEntities.FREDDY.get(), FreddyRenderer::new);
 
+            event.enqueueWork(() -> {
+                ItemProperties.register(CUPCAKE_PLATE.get(),
+                        ResourceLocation.withDefaultNamespace("pulling"),
+                        (stack, level, entity, seed) ->
+                                entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
+
+                ItemProperties.register(CUPCAKE_PLATE.get(),
+                        ResourceLocation.withDefaultNamespace("pull"),
+                        (stack, level, entity, seed) -> {
+                            if (entity == null || !entity.isUsingItem() || entity.getUseItem() != stack) return 0.0F;
+                            float ticks = stack.getUseDuration(entity) - entity.getUseItemRemainingTicks();
+                            return Math.min(ticks / (float) CupcakePlate.CHARGE_TICKS, 1.0F);
+                        });
+
+                ItemProperties.register(CUPCAKE_PLATE.get(),
+                        ResourceLocation.withDefaultNamespace("charged"),
+                        (stack, level, entity, seed) -> CupcakePlate.isLoaded(stack) ? 1.0F : 0.0F);
+            });
         }
     }
-
 }

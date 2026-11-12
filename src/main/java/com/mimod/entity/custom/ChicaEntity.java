@@ -492,53 +492,52 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity, 
      * Hereda de la bola de fuego del ghast, no deja fuego y tiene mayor potencia de explosión.
      */
     public static class Cupcake extends LargeFireball{
-        //constructor obligatorio de Minecraft (para el registro en ModEntities)
         public Cupcake(EntityType<? extends LargeFireball> entityType, Level level) {
             super(entityType, level);
         }
-        private static final int EXPLOSION_POWER = 5; //explosion de creeper=3 --> le he bajado el daño a uno para ver mejor el funcionamiento
+        private static final int EXPLOSION_POWER = 5;
 
-        public Cupcake(Level level, ChicaEntity owner, Vec3 direction) { // lo cambio a ChicaEntity para poder sacar la posición de Chica
-            super(ModEntities.CUPCAKE.get(), level); // para que se use el registro personalizado en lugar del de FireBall
-            this.setOwner(owner); // para saber quién lo ha disparado y así evitar que le dañe
-            this.setPos(owner.getX(), owner.getY(0.5D) + 0.5D, owner.getZ()); // para que salga desde más arriba en vez de desde los pies
-            this.setDeltaMovement(direction.scale(0.5D)); // empuja el proyectil
+        // Constructor original para Chica
+        public Cupcake(Level level, ChicaEntity owner, Vec3 direction) {
+            super(ModEntities.CUPCAKE.get(), level);
+            if (owner != null) {
+                this.setOwner(owner);
+                this.setPos(owner.getX(), owner.getY(0.5D) + 0.5D, owner.getZ());
+            }
+            this.setDeltaMovement(direction.scale(0.5D));
         }
-        /**
-         * para apagar el fuego pero mantener la explosión
-         */
+
+        // NUEVO: Constructor para cuando lo dispara un Jugador desde el plato
+        public Cupcake(Level level, Player owner, Vec3 direction) {
+            super(ModEntities.CUPCAKE.get(), level);
+            if (owner != null) {
+                this.setOwner(owner);
+                this.setPos(owner.getX(), owner.getEyeY() - 0.1D, owner.getZ());
+            }
+            this.setDeltaMovement(direction.scale(1.5D));
+        }
+
         @Override
         public boolean shouldBurn() {
             return false;
         }
 
-        /**
-         * Define que hace cuando golpea
-         * @param result
-         */
         @Override
         protected void onHit(HitResult result) {
             if (!this.level().isClientSide) {
-                // El último parámetro 'false' = SIN fuego
                 this.level().explode(
                         this,
                         this.getX(), this.getY(), this.getZ(),
-                        EXPLOSION_POWER,                              // potencia (3 = creeper)
-                        false,                             // false = no genera fuego
-                        Level.ExplosionInteraction.TNT     // indica como interactua con el mundo y que puede destruir/afectar
+                        EXPLOSION_POWER,
+                        false,
+                        Level.ExplosionInteraction.TNT
                 );
                 this.discard();
             }
         }
-        /**
-         * Indica que el proyectil, es decir el cupcake, no se puede dañar.
-         * @param source
-         * @param amount
-         * @return
-         */
+
         @Override
         public boolean hurt(DamageSource source, float amount) {
             return false;
         }
-    }
-}
+    }}

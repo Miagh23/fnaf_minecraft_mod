@@ -1,0 +1,64 @@
+{
+	"format_version": "26.3",
+	"credit": "Made with Blockbench",
+	"texture_size": [128, 128],
+	"textures": {
+		"0": "mimod:item/cupcake_plate"
+	},
+	"elements": [
+		{
+			"name": "Plate",
+			"from": [4, 0, 3.97143],
+			"to": [12, 1, 11.97143],
+			"faces": {
+				"north": {"uv": [1, 6.625, 1.125, 7.625], "texture": "#0"},
+				"east": {"uv": [0, 6.625, 1, 7.625], "texture": "#0"},
+				"south": {"uv": [2.125, 6.625, 2.25, 7.625], "texture": "#0"},
+				"west": {"uv": [1.125, 5.625, 1.25, 6.625], "texture": "#0"},
+				"up": {"uv": [1.125, 7.625, 0, 6.625], "texture": "#0"},
+				"down": {"uv": [2.125, 6.625, 1.125, 7.625], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [-128.1, 88.05, 125.98],
+			"translation": [0, 8, 0.25]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [-3.67, -88.42, -2.5],
+			"translation": [0, 8, 0.25]
+		},
+		"firstperson_righthand": {
+			"rotation": [6.23, 28.01, -15.25],
+			"translation": [2, 6.25, 0]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-176.91, -30.21, -164.27],
+			"translation": [2.5, 6.25, -0.5]
+		},
+		"ground": {
+			"translation": [0, 4.25, 0]
+		},
+		"gui": {
+			"rotation": [0, 74.25, 0],
+			"translation": [0, 2.25, 0]
+		},
+		"fixed": {
+			"rotation": [0, -88, 0],
+			"translation": [0, 2.75, -1.25]
+		},
+		"on_shelf": {
+			"rotation": [0, 89.75, 0]
+		}
+	},
+	"groups": [
+		{
+			"name": "MainCharacter",
+			"origin": [8, 6, 8],
+			"scope": 0,
+			"color": 0,
+			"children": [0]
+		}
+	]
+}
