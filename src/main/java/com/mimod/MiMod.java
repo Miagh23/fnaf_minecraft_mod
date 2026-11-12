@@ -5,6 +5,10 @@ import com.mimod.entity.client.renderer.chica.ChicaRenderer;
 import com.mimod.entity.client.renderer.freddy.FreddyRenderer;
 import com.mimod.keymapping.network.ModNetwork;
 import com.mimod.modItems.*;
+import com.mimod.modItems.BonnieGuitar;
+import com.mimod.modItems.CupcakePlate;
+import com.mimod.modItems.FoxyHook;
+import com.mimod.modItems.FreddyMask;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -26,7 +30,6 @@ import net.minecraft.resources.ResourceLocation;
 //Este es el archivo del mod en sí
 @Mod(MiMod.MOD_ID)
 public class MiMod {
-
     public static final String MOD_ID = "mimod";
 
     //LivingEntity si es una entidad como un mob
@@ -101,10 +104,10 @@ public class MiMod {
 
     public MiMod()
     {
-       //Se define el event bus
-      IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        //Se define el event bus
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-      //Se llama al metodo register de cada clase pasandole el modEventbus
+        //Se llama al metodo register de cada clase pasandole el modEventbus
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
