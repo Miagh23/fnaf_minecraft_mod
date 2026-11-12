@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "mimod:pizzeria",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 93,
+    "separation": 0,
+    "salt": 490165930
+  }
+}

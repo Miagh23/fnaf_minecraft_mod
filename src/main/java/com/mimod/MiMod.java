@@ -59,17 +59,14 @@ public class MiMod {
 
     public MiMod()
     {
-       //Se define el event bus
-      IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        //Se define el event bus
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-      //Se llama al metodo register de cada clase pasandole el modEventbus
+        //Se llama al metodo register de cada clase pasandole el modEventbus
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
-        /*Esta maldita linea es la que hace falta para que se muestre el item cuando se busca en creativo*/
         modEventBus.addListener(MiMod::addCreative);
-
-/*This line registers every declared Item using ITEMS registry*/
-      ITEMS.register(modEventBus);
+        ITEMS.register(modEventBus);
     }
 
     @SubscribeEvent
@@ -86,14 +83,15 @@ public class MiMod {
     }
 
     /**
-     * Para que el event bus vaya descubriendo métodos a los que llamar
-     * @param event
+     - Para que el event bus vaya descubriendo métodos a los que llamar
+     - @param event
      */
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
 
     }
+
     @Mod.EventBusSubscriber(modid = MOD_ID, bus= Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
     {
