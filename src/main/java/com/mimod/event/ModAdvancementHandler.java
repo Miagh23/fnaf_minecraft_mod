@@ -28,6 +28,11 @@ public class ModAdvancementHandler {
             grantAdvancement(player, "mimod", "kill_bonnie");
         }
 
+        // Cuando muere Chica a manos de un jugador
+        if (event.getEntity() instanceof ChicaEntity && event.getSource().getEntity() instanceof ServerPlayer player) {
+            grantAdvancement(player, "mimod", "kill_chica");
+        }
+
     }
 
     // busca el logro en los archivos y se lo otorga al jugador
