@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "id": "mimod:freddy_mask"
+    },
+    "title": {
+      "translate": "advancement.mimod.root.title"
+    },
+    "description": {
+      "translate": "advancement.mimod.root.desc"
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/nether.png",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

@@ -3,5 +3,9 @@
   "item.mimod.bonnie_guitar": "Bonnie's Guitar",
   "item.mimod.cupcake_plate": "Chica's Plate",
   "item.mimod.cupcake": "Chica's cupcake",
-  "item.mimod.freddy_mask": "Freddy's Mask"
+  "item.mimod.freddy_mask": "Freddy's Mask",
+  "advancement.mimod.root.title": "Freddy Fazbear's Pizza",
+  "advancement.mimod.root.desc": "Volvemos al 87;)",
+  "advancement.mimod.kill_bonnie": "Un, dos, tres, al escondite inglés",
+  "advancement.mimod.kill_bonnie.desc": "Has derrotado a Bonnie por primera vez"
 }

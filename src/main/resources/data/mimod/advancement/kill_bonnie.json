@@ -1,0 +1,22 @@
+{
+  "parent": "mimod:root",
+  "display": {
+    "icon": {
+      "id": "mimod:bonnie_guitar"
+    },
+    "title": {
+      "translate": "advancement.mimod.kill_bonnie"
+    },
+    "description": {
+      "translate": "advancement.mimod.kill_bonnie.desc"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}
