@@ -1,24 +1,31 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "equipment",
-  "pattern": [
-    "I ",
-    "IR",
-    "G "
-  ],
-  "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
+  "display": {
+    "icon": {
+      "id": "minecraft:bricks"
     },
-    "R": {
-      "item": "minecraft:redstone"
-    },
-    "G": {
-      "item": "minecraft:glass"
-    }
+    "title": "¡Bienvenid@ a Freddy Fazbear's Pizza!",
+    "description": "Cuidado, tal vez te lleves un mordisco;)",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
   },
-  "result": {
-    "count": 1,
-    "id": "mimod:flashlight"
+  "parent": "mimod:root",
+  "criteria": {
+    "in_pizzeria": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": "mimod:pizzeria"
+              }
+            }
+          }
+        ]
+      }
+    }
   }
 }
