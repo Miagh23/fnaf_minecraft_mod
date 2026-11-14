@@ -2,9 +2,12 @@
   "display": {
     "icon": {
       "id": "minecraft:bricks"
+    },"title": {
+      "translate": "advancement.mimod.enter_pizzeria.title"
     },
-    "title": "¡Bienvenid@ a Freddy Fazbear's Pizza!",
-    "description": "Cuidado, te puedes llevar un mordisco:)",
+    "description": {
+      "translate": "advancement.mimod.enter_pizzeria.desc"
+    },
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true

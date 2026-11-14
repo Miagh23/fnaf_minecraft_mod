@@ -3,8 +3,12 @@
     "icon": {
       "id": "minecraft:carved_pumpkin"
     },
-    "title": "No, that's just Freddy:)",
-    "description": "Ponte la cabeza de Freddy",
+    "title": {
+      "translate": "advancement.mimod.wear_freddy_head.title"
+    },
+    "description": {
+      "translate": "advancement.mimod.wear_freddy_head.desc"
+    },
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true
@@ -21,7 +25,7 @@
             "predicate": {
               "equipment": {
                 "head": {
-                  "items": "mimod:freddy_head"
+                  "items": "mimod:freddy_mask"
                 }
               }
             }

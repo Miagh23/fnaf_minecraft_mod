@@ -3,8 +3,12 @@
     "icon": {
       "id": "minecraft:clock"
     },
-    "title": "Ellos solo querían un abrazo... ¿o no?",
-    "description": "Sobrevive a tu primera noche",
+    "title": {
+      "translate": "advancement.mimod.survive_night.title"
+    },
+    "description": {
+      "translate": "advancement.mimod.survive_night.desc"
+    },
     "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true
