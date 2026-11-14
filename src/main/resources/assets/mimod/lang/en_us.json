@@ -9,5 +9,7 @@
   "advancement.mimod.kill_bonnie": "Un, dos, tres, al escondite inglés",
   "advancement.mimod.kill_bonnie.desc": "Has derrotado a Bonnie por primera vez",
   "advancement.mimod.kill_chica": "Let's eat!",
-  "advancement.mimod.kill_chica.desc": "¿¡¿¡Querías comerte a Carl!??!"
+  "advancement.mimod.kill_chica.desc": "¿¡¿¡Querías comerte a Carl!??!",
+  "advancement.mimod.foxy_attack": "ARRR!",
+  "advancement.mimod.foxy_attack.desc": "Nunca subestimes la astucia de un pirata... ¡o de un zorro, ya puestos!"
 }

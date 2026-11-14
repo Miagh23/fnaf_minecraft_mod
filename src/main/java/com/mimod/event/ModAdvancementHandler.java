@@ -2,10 +2,12 @@ package com.mimod.event;
 
 import com.mimod.entity.custom.BonnieEntity;
 import com.mimod.entity.custom.ChicaEntity;
+import com.mimod.entity.custom.foxy.FoxyEntity;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -32,7 +34,14 @@ public class ModAdvancementHandler {
         if (event.getEntity() instanceof ChicaEntity && event.getSource().getEntity() instanceof ServerPlayer player) {
             grantAdvancement(player, "mimod", "kill_chica");
         }
+    }
 
+    @SubscribeEvent
+    public static void onEntityHurt(LivingHurtEvent event) {
+        // Cuando un jugador recibe daño de Foxy
+        if (event.getEntity() instanceof ServerPlayer player && event.getSource().getEntity() instanceof FoxyEntity) {
+            grantAdvancement(player, "mimod", "foxy_attack");
+        }
     }
 
     // busca el logro en los archivos y se lo otorga al jugador
