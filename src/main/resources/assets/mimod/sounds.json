@@ -30,5 +30,23 @@
         "stream": false
       }
     ]
+  },
+  "guitar_note_mi_low": {
+    "sounds": ["mimod:bonnie_guitar_keys/guitar_mi_low_short"]
+  },
+  "guitar_note_la": {
+    "sounds": ["mimod:bonnie_guitar_keys/guitar_la_short"]
+  },
+  "guitar_note_re": {
+    "sounds": ["mimod:bonnie_guitar_keys/guitar_re_short"]
+  },
+  "guitar_note_sol": {
+    "sounds": ["mimod:bonnie_guitar_keys/guitar_sol_short"]
+  },
+  "guitar_note_si": {
+    "sounds": ["mimod:bonnie_guitar_keys/guitar_si_short"]
+  },
+  "guitar_note_mi_high": {
+    "sounds": ["mimod:bonnie_guitar_keys/guitar_mi_high_short"]
   }
 }

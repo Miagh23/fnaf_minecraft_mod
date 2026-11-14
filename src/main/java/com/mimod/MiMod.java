@@ -3,10 +3,8 @@ package com.mimod;
 import com.mimod.entity.ModEntities;
 import com.mimod.entity.client.renderer.chica.ChicaRenderer;
 import com.mimod.entity.client.renderer.freddy.FreddyRenderer;
-import com.mimod.modItems.BonnieGuitar;
-import com.mimod.modItems.CupcakePlate;
-import com.mimod.modItems.FoxyHook;
-import com.mimod.modItems.FreddyMask;
+import com.mimod.keymapping.network.ModNetwork;
+import com.mimod.modItems.*;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -45,6 +43,9 @@ public class MiMod {
             ITEMS.register("bonnie_guitar",
                     () -> new BonnieGuitar(new Item.Properties()));
 
+    public static final RegistryObject<Item> PICK = ITEMS.register("guitar_pick",
+            () -> new GuitarPick(new Item.Properties().stacksTo(1)));
+
     public static final RegistryObject<Item> FREDDY_MASK =
             ITEMS.register("freddy_mask",
                     () -> new FreddyMask(new Item.Properties()));
@@ -65,6 +66,7 @@ public class MiMod {
       //Se llama al metodo register de cada clase pasandole el modEventbus
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
+        ModNetwork.register();
         /*Esta maldita linea es la que hace falta para que se muestre el item cuando se busca en creativo*/
         modEventBus.addListener(MiMod::addCreative);
 
