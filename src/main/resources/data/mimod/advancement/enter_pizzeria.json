@@ -9,7 +9,7 @@
     "show_toast": true,
     "announce_to_chat": true
   },
-  "parent": "mimod:enter_pizzeria",
+  "parent": "mimod:root",
   "criteria": {
     "in_pizzeria": {
       "trigger": "minecraft:location",

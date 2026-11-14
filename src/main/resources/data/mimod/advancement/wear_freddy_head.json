@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:carved_pumpkin"
+    },
+    "title": "No, that's just Freddy:)",
+    "description": "Ponte la cabeza de Freddy",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "mimod:root",
+  "criteria": {
+    "wearing_head": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "equipment": {
+                "head": {
+                  "items": "mimod:freddy_head"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
