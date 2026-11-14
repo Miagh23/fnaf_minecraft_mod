@@ -20,11 +20,17 @@ public class ClientKeyHandler {
         Player player = Minecraft.getInstance().player;
         if (player == null || !GuitarPick.isPlayingGuitar(player)) return;
 
-        while (ModKeys.NOTE_MI_LOW.consumeClick()) ModNetwork.sendNote(0);
-        while (ModKeys.NOTE_LA.consumeClick()) ModNetwork.sendNote(1);
-        while (ModKeys.NOTE_RE.consumeClick()) ModNetwork.sendNote(2);
-        while (ModKeys.NOTE_SOL.consumeClick()) ModNetwork.sendNote(3);
-        while (ModKeys.NOTE_SI.consumeClick()) ModNetwork.sendNote(4);
-        while (ModKeys.NOTE_MI_HIGH.consumeClick()) ModNetwork.sendNote(5);
+        boolean longVersion = ModKeys.LONG_MODIFIER.isDown();
+
+        while (ModKeys.NOTE_MI_LOW.consumeClick()) ModNetwork.sendNote(0, longVersion);
+        while (ModKeys.NOTE_LA.consumeClick())   {
+            System.out.println("[CLIENTE] Nota LA | long=" + longVersion);
+            ModNetwork.sendNote(1, longVersion);
+
+        }
+        while (ModKeys.NOTE_RE.consumeClick())     ModNetwork.sendNote(2, longVersion);
+        while (ModKeys.NOTE_SOL.consumeClick())    ModNetwork.sendNote(3, longVersion);
+        while (ModKeys.NOTE_SI.consumeClick())     ModNetwork.sendNote(4, longVersion);
+        while (ModKeys.NOTE_MI_HIGH.consumeClick())ModNetwork.sendNote(5, longVersion);
     }
 }

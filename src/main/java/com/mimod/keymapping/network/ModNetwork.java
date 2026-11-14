@@ -18,7 +18,7 @@ public class ModNetwork {
                 .add(PlayNotePacket.class, PlayNotePacket.STREAM_CODEC, PlayNotePacket::handle);
     }
 
-    public static void sendNote(int note) {
-        CHANNEL.send(new PlayNotePacket(note), PacketDistributor.SERVER.noArg());
+    public static void sendNote(int note, boolean longVersion) {
+        CHANNEL.send(new PlayNotePacket(note, longVersion), PacketDistributor.SERVER.noArg());
     }
 }

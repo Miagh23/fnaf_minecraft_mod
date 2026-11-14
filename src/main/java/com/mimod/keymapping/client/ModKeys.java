@@ -19,4 +19,6 @@ public class ModKeys {
             new KeyMapping("key.mimod.si", GLFW.GLFW_KEY_B, CATEGORY);
     public static final KeyMapping NOTE_MI_HIGH =
             new KeyMapping("key.mimod.mi_high", GLFW.GLFW_KEY_N, CATEGORY);
+    public static final KeyMapping LONG_MODIFIER =
+            new KeyMapping("key.mimod.long_modifier", GLFW.GLFW_KEY_KP_ENTER, CATEGORY);
 }

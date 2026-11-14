@@ -9,12 +9,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Debug;
 
-public record PlayNotePacket(int note) {
+import java.util.List;
+
+public record PlayNotePacket(int note, boolean longVersion) {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PlayNotePacket> STREAM_CODEC =
             StreamCodec.composite(
                     ByteBufCodecs.VAR_INT, PlayNotePacket::note,
+                    ByteBufCodecs.BOOL, PlayNotePacket::longVersion,
                     PlayNotePacket::new
             );
 
@@ -25,10 +30,19 @@ public record PlayNotePacket(int note) {
         ctx.enqueueWork(() -> {
             if (!GuitarPick.isPlayingGuitar(player)) return;
 
+            System.out.println("[SERVIDOR] note=" + msg.note()
+                    + " long=" + msg.longVersion());
+
+            List<RegistryObject<SoundEvent>> notes = msg.longVersion()
+                    ? ModSounds.GUITAR_RIFFS_LONG
+                    : ModSounds.GUITAR_NOTES;
+
             // Validar que el índice existe en la lista de sonidos
             if (msg.note() < 0 || msg.note() >= ModSounds.GUITAR_NOTES.size()) return;
 
-            SoundEvent sound = ModSounds.GUITAR_NOTES.get(msg.note()).get();
+
+            SoundEvent sound = notes.get(msg.note()).get();
+            System.out.println("[SERVIDOR] Reproduciendo: " + sound.getLocation());
             player.level().playSound(null, player.blockPosition(),
                     sound, SoundSource.PLAYERS, 1.0F, 1.0F);
         });

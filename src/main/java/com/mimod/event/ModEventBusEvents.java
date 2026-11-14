@@ -57,6 +57,7 @@ public class ModEventBusEvents {
         event.register(ModKeys.NOTE_SOL);
         event.register(ModKeys.NOTE_SI);
         event.register(ModKeys.NOTE_MI_HIGH);
+        event.register(ModKeys.LONG_MODIFIER);
     }
 }
 
