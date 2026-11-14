@@ -45,7 +45,7 @@ public class ModAdvancementHandler {
     }
 
     // busca el logro en los archivos y se lo otorga al jugador
-    private static void grantAdvancement(ServerPlayer player, String modId, String advancementName) {
+    public static void grantAdvancement(ServerPlayer player, String modId, String advancementName) {
         // Crea la ruta de identificación del logro buscando el namespace (ej: "mimod") y el nombre del archivo json (ej: "kill_bonnie")
         ResourceLocation loc = ResourceLocation.fromNamespaceAndPath(modId, advancementName);
         // Busca en el servidor el logro que coincida con esa ruta
