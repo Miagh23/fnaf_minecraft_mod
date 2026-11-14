@@ -2,7 +2,7 @@
   "parent": "mimod:root",
   "display": {
     "icon": {
-      "id": "mimod:freddy_mask"
+      "id": "mimod:flashlight"
     },
     "title": {
       "translate": "advancement.mimod.escape_freddy"
