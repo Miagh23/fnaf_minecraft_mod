@@ -2,7 +2,8 @@
   "display": {
     "icon": {
       "id": "minecraft:bricks"
-    },"title": {
+    },
+    "title": {
       "translate": "advancement.mimod.enter_pizzeria.title"
     },
     "description": {
@@ -23,7 +24,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structures": "mimod:pizzeria"
+                "structures": "minecraft:village_plains"
               }
             }
           }
