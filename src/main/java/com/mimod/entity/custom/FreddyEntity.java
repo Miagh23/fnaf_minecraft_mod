@@ -395,6 +395,12 @@ public class FreddyEntity extends Monster implements GeoEntity, Fleeing {
             if (player != null) {
                 player.removeEffect(MobEffects.CONFUSION);
                 player.removeEffect(MobEffects.BLINDNESS);
+
+                // Si el jugador ha conseguido escapar con vida de Freddy:
+                if (escaped && player instanceof ServerPlayer serverPlayer) {
+                    com.mimod.event.ModAdvancementHandler.grantAdvancement(serverPlayer, "mimod", "escape_freddy");
+                }
+
                 player = null;
             }
             mob.setAttackCooldown(-1); //-1 indica false para el sitting si no, canUse() sería true otra vez y reiniciaría el goal

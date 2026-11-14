@@ -1,0 +1,18 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mimod:item/flashlight"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 5, 80, -42 ],
+      "translation": [ 0, 5, 1 ],
+      "scale": [ 1.2, 1.2, 1.2 ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [ 0, 180, 0 ],
+      "translation": [ 0, 4, 0 ],
+      "scale": [ 0.55, 0.55, 0.55 ]
+    }
+  }
+}

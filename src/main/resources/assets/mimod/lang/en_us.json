@@ -3,5 +3,22 @@
   "item.mimod.bonnie_guitar": "Bonnie's Guitar",
   "item.mimod.cupcake_plate": "Chica's Plate",
   "item.mimod.cupcake": "Chica's cupcake",
-  "item.mimod.freddy_mask": "Freddy's Mask"
+  "item.mimod.freddy_mask": "Freddy's Mask",
+  "item.mimod.flashlight": "Flashlight",
+  "advancement.mimod.root.title": "Freddy Fazbear's Pizza",
+  "advancement.mimod.root.desc": "Volvemos al 87;)",
+  "advancement.mimod.kill_bonnie": "Un, dos, tres, al escondite inglés",
+  "advancement.mimod.kill_bonnie.desc": "Has derrotado a Bonnie por primera vez",
+  "advancement.mimod.kill_chica": "Let's eat!",
+  "advancement.mimod.kill_chica.desc": "¿¡¿¡Querías comerte a Carl!??!",
+  "advancement.mimod.foxy_attack": "ARRR!",
+  "advancement.mimod.foxy_attack.desc": "Nunca subestimes la astucia de un pirata... ¡o de un zorro, ya puestos!",
+  "advancement.mimod.escape_freddy": "Hor hor hor",
+  "advancement.mimod.escape_freddy.desc": "Sal de la zona de peligro de Freddy de una sola pieza.",
+  "advancement.mimod.enter_pizzeria.title": "¡Bienvenid@ a Freddy Fazbear's Pizza!",
+  "advancement.mimod.enter_pizzeria.desc": "Cuidado, te puedes llevar un mordisco:)",
+  "advancement.mimod.wear_freddy_head.title": "No, that's just Freddy:)",
+  "advancement.mimod.wear_freddy_head.desc": "Ponte la cabeza de Freddy",
+  "advancement.mimod.survive_night.title": "Ellos solo querían un abrazo... ¿o no?",
+  "advancement.mimod.survive_night.desc": "Sobrevive a tu primera noche"
 }
