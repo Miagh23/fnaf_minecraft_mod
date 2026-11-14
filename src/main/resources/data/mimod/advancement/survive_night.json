@@ -1,0 +1,18 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:clock"
+    },
+    "title": "Ellos solo querían un abrazo... ¿o no?",
+    "description": "Sobrevive a tu primera noche",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "mimod:root",
+  "criteria": {
+    "survived": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}
