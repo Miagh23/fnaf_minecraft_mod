@@ -58,6 +58,12 @@ public class ModEventBusEvents {
         event.register(ModKeys.NOTE_SI);
         event.register(ModKeys.NOTE_MI_HIGH);
         event.register(ModKeys.LONG_MODIFIER);
+        event.register(ModKeys.SCALE_SIB);
+        event.register(ModKeys.SCALE_DO);
+        event.register(ModKeys.SCALE_RE);
+        event.register(ModKeys.SCALE_FAS);
+        event.register(ModKeys.SCALE_SOLS);
+        event.register(ModKeys.SCALE_MAYOR_MODIFIER);
     }
 }
 
