@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:bone"
+  },
+  "result": {
+    "id": "mimod:guitar_pick",
+    "count": 1
+  }
+}
