@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " B ",
+    "BRB",
+    " B "
+  ],
+  "key": {
+    "B": { "item": "minecraft:bone_meal" },
+    "R": { "item": "minecraft:red_dye" }
+  },
+  "result": {
+    "id": "mimod:guitar_pick",
+    "count": 1
+  }
+}
