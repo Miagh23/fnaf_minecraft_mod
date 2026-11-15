@@ -58,6 +58,10 @@ public class MiMod {
             ITEMS.register("cupcake",
                     () -> new Item(new Item.Properties().stacksTo(64)));
 
+    public static final RegistryObject<Item> FLASHLIGHT =
+            ITEMS.register("flashlight",
+                    () -> new FlashlightItem(new Item.Properties()));
+
     public MiMod()
     {
        //Se define el event bus
@@ -84,6 +88,9 @@ public class MiMod {
             event.accept(BONNIE_GUITAR.get());
             event.accept(CUPCAKE_PLATE.get());
             event.accept(CUPCAKE.get());
+            event.accept(PICK.get());
+            event.accept(FREDDY_MASK.get());
+            event.accept(FLASHLIGHT.get());
         }
     }
 
