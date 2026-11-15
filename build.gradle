@@ -77,6 +77,7 @@ minecraft {
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
+            args '-mixin.config=mimod.mixins.json'
         }
 
         client {
@@ -122,6 +123,11 @@ repositories {
         name = 'GeckoLib'
         url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
     }
+
+    maven {
+        name = 'Sponge'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+    }
 }
 
 dependencies {
@@ -150,6 +156,7 @@ dependencies {
     // Hack fix for now, force jopt-simple to be exactly 5.0.4 because Mojang ships that version, but some transitive dependencies request 6.0+ 
     implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
     implementation 'software.bernie.geckolib:geckolib-forge-1.21:4.5.+'
+    compileOnly 'org.spongepowered:mixin:0.8.5'
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

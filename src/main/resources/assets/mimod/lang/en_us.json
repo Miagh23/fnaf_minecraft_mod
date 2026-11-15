@@ -21,5 +21,9 @@
   "advancement.mimod.wear_freddy_head.title": "No, that's just Freddy:)",
   "advancement.mimod.wear_freddy_head.desc": "Ponte la cabeza de Freddy",
   "advancement.mimod.survive_night.title": "Ellos solo querían un abrazo... ¿o no?",
-  "advancement.mimod.survive_night.desc": "Sobrevive a tu primera noche"
+  "advancement.mimod.survive_night.desc": "Sobrevive a tu primera noche",
+  "item.mimod.springbonie_helmet": "SpringBonie Helmet",
+  "item.mimod.springbonie_chestplate": "SpringBonie Chestplate",
+  "item.mimod.springbonie_leggings": "SpringBonie Leggings",
+  "item.mimod.springbonie_boots": "SpringBonie Boots"
 }

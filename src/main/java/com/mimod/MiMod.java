@@ -6,6 +6,8 @@ import com.mimod.entity.client.renderer.freddy.FreddyRenderer;
 import com.mimod.keymapping.network.ModNetwork;
 import com.mimod.modItems.*;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
@@ -62,6 +64,26 @@ public class MiMod {
     public static final RegistryObject<Item> FLASHLIGHT =
             ITEMS.register("flashlight",
                     () -> new FlashlightItem(new Item.Properties()));
+
+    public static final RegistryObject<Item> SPRINGBONIE_HELMET =
+            ITEMS.register("springbonie_helmet", () ->
+                    new CursedArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET,
+                            new Item.Properties().durability(ArmorItem.Type.HELMET.getDurability(33))));
+
+    public static final RegistryObject<Item> SPRINGBONIE_CHESTPLATE =
+            ITEMS.register("springbonie_chestplate", () ->
+                    new CursedArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.CHESTPLATE,
+                            new Item.Properties().durability(ArmorItem.Type.CHESTPLATE.getDurability(33))));
+
+    public static final RegistryObject<Item> SPRINGBONIE_LEGGINGS =
+            ITEMS.register("springbonie_leggings", () ->
+                    new CursedArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.LEGGINGS,
+                            new Item.Properties().durability(ArmorItem.Type.LEGGINGS.getDurability(33))));
+
+    public static final RegistryObject<Item> SPRINGBONIE_BOOTS =
+            ITEMS.register("springbonie_boots", () ->
+                    new CursedArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.BOOTS,
+                            new Item.Properties().durability(ArmorItem.Type.BOOTS.getDurability(33))));
 
     public MiMod()
     {
