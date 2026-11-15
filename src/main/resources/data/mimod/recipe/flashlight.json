@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:bricks"
+    },
+    "title": "¡Bienvenid@ a Freddy Fazbear's Pizza!",
+    "description": "Cuidado, tal vez te lleves un mordisco;)",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "mimod:root",
+  "criteria": {
+    "in_pizzeria": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": "mimod:pizzeria"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

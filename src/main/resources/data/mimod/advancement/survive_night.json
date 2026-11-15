@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:clock"
+    },
+    "title": {
+      "translate": "advancement.mimod.survive_night.title"
+    },
+    "description": {
+      "translate": "advancement.mimod.survive_night.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "mimod:root",
+  "criteria": {
+    "survived": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

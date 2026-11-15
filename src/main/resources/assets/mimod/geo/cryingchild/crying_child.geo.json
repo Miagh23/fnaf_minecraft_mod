@@ -1,0 +1,152 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "Sketchfab_model",
+					"pivot": [0, -1.5, 0]
+				},
+				{
+					"name": "root",
+					"parent": "Sketchfab_model",
+					"pivot": [0, -1.5, 0]
+				},
+				{
+					"name": "GLTF_SceneRootNode",
+					"parent": "root",
+					"pivot": [0, -1.5, 0]
+				},
+				{
+					"name": "_7",
+					"parent": "GLTF_SceneRootNode",
+					"pivot": [0, -1.5, 0]
+				},
+				{
+					"name": "Pivot_6",
+					"parent": "_7",
+					"pivot": [0, -1.5, 0]
+				},
+				{
+					"name": "Head_2",
+					"parent": "Pivot_6",
+					"pivot": [0, 5, -2]
+				},
+				{
+					"name": "Head_0",
+					"parent": "Head_2",
+					"pivot": [0, -1.5, 0]
+				},
+				{
+					"name": "Object_7",
+					"parent": "Head_0",
+					"pivot": [0, -1.5, 0],
+					"cubes": [
+						{
+							"origin": [-2, 5.098, -3.982],
+							"size": [4, 4, 4],
+							"pivot": [0, 7.098, -1.982],
+							"rotation": [180, 0, -180],
+							"uv": {
+								"north": {"uv": [24.01563, 8.01563], "uv_size": [7.96875, 7.96875]},
+								"east": {"uv": [16.01563, 8.01563], "uv_size": [7.96875, 7.96875]},
+								"south": {"uv": [8.01563, 8.01563], "uv_size": [7.96875, 7.96875]},
+								"west": {"uv": [0.01563, 8.01563], "uv_size": [7.96875, 7.96875]},
+								"up": {"uv": [15.98438, 7.98438], "uv_size": [-7.96875, -7.96875]},
+								"down": {"uv": [23.98438, 0.01563], "uv_size": [-7.96875, 7.96875]}
+							}
+						}
+					]
+				},
+				{
+					"name": "Head_1",
+					"parent": "Head_2",
+					"pivot": [0, -1.5, 0]
+				},
+				{
+					"name": "Object_9",
+					"parent": "Head_1",
+					"pivot": [0, -1.5, 0],
+					"cubes": [
+						{
+							"origin": [-2, 3.098, -3.982],
+							"size": [4, 2, 0.001],
+							"pivot": [0, 4.098, -3.982],
+							"rotation": [180, 0, 180],
+							"uv": {
+								"north": {"uv": [8.01563, 34.01563], "uv_size": [7.96875, 3.96875]},
+								"east": {"uv": [8.01563, 34.01563], "uv_size": [-0.03125, 3.96875]},
+								"south": {"uv": [0.01563, 34.01563], "uv_size": [7.96875, 3.96875]},
+								"west": {"uv": [0.01563, 34.01563], "uv_size": [-0.03125, 3.96875]},
+								"up": {"uv": [7.98438, 34.01563], "uv_size": [-7.96875, -0.03125]},
+								"down": {"uv": [15.98438, 34.01563], "uv_size": [-7.96875, -0.03125]}
+							}
+						}
+					]
+				},
+				{
+					"name": "Body_5",
+					"parent": "Pivot_6",
+					"pivot": [0, 5, -2]
+				},
+				{
+					"name": "Body_3",
+					"parent": "Body_5",
+					"pivot": [0, -0.75, 1.5]
+				},
+				{
+					"name": "Object_12",
+					"parent": "Body_3",
+					"pivot": [0, -0.75, 1.5],
+					"cubes": [
+						{
+							"origin": [-0.001, 0.608, -2.326],
+							"size": [0.001, 3.5, 6],
+							"inflate": 0.01,
+							"pivot": [0, 2.358, 0.674],
+							"rotation": [12.5, 0, 0],
+							"uv": {
+								"east": {"uv": [0.01563, 16.01563], "uv_size": [11.96875, 6.96875]},
+								"west": {"uv": [12.01563, 16.01563], "uv_size": [11.96875, 6.96875]}
+							}
+						}
+					]
+				},
+				{
+					"name": "Body_4",
+					"parent": "Body_5",
+					"pivot": [0, -0.75, 1.5]
+				},
+				{
+					"name": "Object_14",
+					"parent": "Body_4",
+					"pivot": [0, -0.75, 1.5],
+					"cubes": [
+						{
+							"origin": [-1, 2.67, -2.825],
+							"size": [2, 3.5, 2.5],
+							"pivot": [0, 4.42, -1.575],
+							"rotation": [167.5, 0, -180],
+							"uv": {
+								"north": {"uv": [38.01563, 23.01563], "uv_size": [3.96875, 6.96875]},
+								"east": {"uv": [33.01563, 23.01563], "uv_size": [4.96875, 6.96875]},
+								"south": {"uv": [29.01563, 23.01563], "uv_size": [3.96875, 6.96875]},
+								"west": {"uv": [24.01563, 23.01563], "uv_size": [4.96875, 6.96875]},
+								"up": {"uv": [32.98438, 22.98438], "uv_size": [-3.96875, -4.96875]},
+								"down": {"uv": [36.98438, 18.01563], "uv_size": [-3.96875, 4.96875]}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

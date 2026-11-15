@@ -1,0 +1,22 @@
+{
+  "parent": "mimod:root",
+  "display": {
+    "icon": {
+      "id": "mimod:cupcake"
+    },
+    "title": {
+      "translate": "advancement.mimod.kill_chica"
+    },
+    "description": {
+      "translate": "advancement.mimod.kill_chica.desc"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

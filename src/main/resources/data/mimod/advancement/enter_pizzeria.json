@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:bricks"
+    },
+    "title": {
+      "translate": "advancement.mimod.enter_pizzeria.title"
+    },
+    "description": {
+      "translate": "advancement.mimod.enter_pizzeria.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "mimod:root",
+  "criteria": {
+    "in_pizzeria": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": "minecraft:village_plains"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
