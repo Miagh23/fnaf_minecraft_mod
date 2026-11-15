@@ -19,6 +19,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 
@@ -31,6 +32,41 @@ public class MiMod {
     //LivingEntity si es una entidad como un mob
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
+
+//for the egg spawns: ----------------------------------------------
+
+    public static final RegistryObject<Item> FREDDY_SPAWN_EGG =
+            ITEMS.register("freddy_spawn_egg",
+                    () -> new ForgeSpawnEggItem(
+                            ModEntities.FREDDY,
+                            0x79502B, 0x382318,
+                            new Item.Properties()
+                    ));
+
+    public static final RegistryObject<Item> CHICA_SPAWN_EGG =
+            ITEMS.register("chica_spawn_egg",
+                    () -> new ForgeSpawnEggItem(
+                            ModEntities.CHICA,
+                            16763904, 16753920,
+                            new Item.Properties()
+                    ));
+
+    public static final RegistryObject<Item> BONNIE_SPAWN_EGG =
+            ITEMS.register("bonnie_spawn_egg",
+                    () -> new ForgeSpawnEggItem(
+                            ModEntities.BONNIE,
+                            4699132, 614978,
+                            new Item.Properties()
+                    ));
+
+    public static final RegistryObject<Item> FOXY_SPAWN_EGG =
+            ITEMS.register("foxy_spawn_egg",
+                    () -> new ForgeSpawnEggItem(
+                            ModEntities.FOXY,
+                            13369344, 6710886,
+                            new Item.Properties()
+                    ));
+//--------------------------------------------------------------------------
 
     public static final RegistryObject<Item> FIRE_SWORD=
             ITEMS.register("firesword",() -> new FireSword(new Item.Properties()));
