@@ -25,6 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 //Este es el archivo del mod en sí
 @Mod(MiMod.MOD_ID)
 public class MiMod {
+
     public static final String MOD_ID = "mimod";
 
     //LivingEntity si es una entidad como un mob
@@ -70,7 +71,9 @@ public class MiMod {
       //Se llama al metodo register de cada clase pasandole el modEventbus
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
+        ModCreativeTabs.register(modEventBus);
         ModNetwork.register();
+
         /*Esta maldita linea es la que hace falta para que se muestre el item cuando se busca en creativo*/
         modEventBus.addListener(MiMod::addCreative);
 
