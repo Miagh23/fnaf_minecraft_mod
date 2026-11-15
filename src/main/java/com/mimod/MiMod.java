@@ -39,7 +39,7 @@ public class MiMod {
             ITEMS.register("freddy_spawn_egg",
                     () -> new ForgeSpawnEggItem(
                             ModEntities.FREDDY,
-                            15410776, 191612,
+                            0x79502B, 0x382318,
                             new Item.Properties()
                     ));
 
@@ -63,7 +63,7 @@ public class MiMod {
             ITEMS.register("foxy_spawn_egg",
                     () -> new ForgeSpawnEggItem(
                             ModEntities.FOXY,
-                            87105, 6710886,
+                            13369344, 6710886,
                             new Item.Properties()
                     ));
 //--------------------------------------------------------------------------
