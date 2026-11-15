@@ -8,6 +8,7 @@ public class WorldClock {
     // Duración de un día de Minecraft
     private static final long TICKS_PER_DAY = 24000L;
 
+    /*
     // Obtener el número de día
     public static long getDayNumber(Level level) {
 
@@ -20,6 +21,14 @@ public class WorldClock {
                         TICKS_PER_DAY
                 )
         );
+    }*/
+    // Obtener el número de día de forma limpia y directa (si no, no cambia de día bien)
+    public static long getDayNumber(Level level) {
+        if (level == null) return 1L;
+
+        // Usamos el tiempo total del mundo dividido entre los ticks del día
+        long totalTime = level.getDayTime();
+        return (totalTime / TICKS_PER_DAY) + 1L;
     }
 
     // Obtener la hora del mundo
