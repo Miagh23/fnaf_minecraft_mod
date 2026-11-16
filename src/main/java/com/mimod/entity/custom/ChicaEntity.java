@@ -517,6 +517,12 @@ public class ChicaEntity extends Monster implements RangedAttackMob, GeoEntity, 
             this.setDeltaMovement(direction.scale(1.5D));
         }
 
+        public Cupcake(Level level, double x, double y, double z, Vec3 direction) {
+            super(ModEntities.CUPCAKE.get(), level);
+            this.setPos(x, y, z);
+            this.setDeltaMovement(direction.scale(1.5D)); // misma velocidad que el plato
+        }
+
         @Override
         public boolean shouldBurn() {
             return false;

@@ -3,11 +3,13 @@ package com.mimod;
 import com.mimod.entity.ModEntities;
 import com.mimod.entity.client.renderer.chica.ChicaRenderer;
 import com.mimod.entity.client.renderer.freddy.FreddyRenderer;
+import com.mimod.entity.custom.CupcakeDispenseBehavior;
 import com.mimod.keymapping.network.ModNetwork;
 import com.mimod.modItems.*;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -15,6 +17,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -111,6 +114,7 @@ public class MiMod {
 
         /*Esta maldita linea es la que hace falta para que se muestre el item cuando se busca en creativo*/
         modEventBus.addListener(MiMod::addCreative);
+        modEventBus.addListener(this::commonSetup);
 
 /*This line registers every declared Item using ITEMS registry*/
       ITEMS.register(modEventBus);
@@ -140,6 +144,12 @@ public class MiMod {
     public void onServerStarting(ServerStartingEvent event)
     {
 
+    }
+
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(() ->
+                DispenserBlock.registerBehavior(CUPCAKE.get(), new CupcakeDispenseBehavior())
+        );
     }
     @Mod.EventBusSubscriber(modid = MOD_ID, bus= Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
